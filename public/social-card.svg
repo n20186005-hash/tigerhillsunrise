@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#10182d"/>
+      <stop offset="0.64" stop-color="#6f5260"/>
+      <stop offset="1" stop-color="#e7a15e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#sky)"/>
+  <circle cx="830" cy="250" r="78" fill="#f6b548"/>
+  <path d="M0 470 240 320l120 103 130-132 180 169 130-93 170 116 250-165v312H0Z" fill="#202942"/>
+  <path d="M0 520 250 400l110 68 130-103 170 123 140-62 170 91 230-104v217H0Z" fill="#10182d"/>
+  <text x="88" y="145" fill="#fffaf1" font-family="system-ui, sans-serif" font-size="68" font-weight="700">टाइगर हिल</text>
+  <text x="88" y="215" fill="#f6d39b" font-family="system-ui, sans-serif" font-size="34">सूर्योदयअघि हिमाल उज्यालो हुने ठाउँ</text>
+  <text x="90" y="580" fill="#fffaf1" font-family="system-ui, sans-serif" font-size="24" letter-spacing="3">DARJEELING · SENCHAL FOREST</text>
+</svg>

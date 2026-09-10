@@ -1,0 +1,374 @@
+---
+import '../styles/global.css';
+
+const pageTitle = 'टाइगर हिल सनराइज अब्जर्भेटरी | दार्जिलिङ';
+const pageDescription = 'सेन्चल फरेस्टको टाइगर हिलबाट सूर्योदय, कञ्चनजङ्घा दृश्य, यात्रा, पार्किङ, शुल्क, नजिकका ठाउँ र व्यावहारिक सुझावहरूको स्थानीय मार्गदर्शिका।';
+const pageUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).toString() : undefined;
+const socialImage = Astro.site ? new URL('/social-card.svg', Astro.site).toString() : undefined;
+
+const images = {
+  hero: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Kanchenjunga_from_Tiger_Hill_at_dawn.jpg',
+  sunrise: 'https://upload.wikimedia.org/wikipedia/commons/d/d6/Sunrise_at_Tigerhill%2C_Darjeeling.jpg',
+  viewpoint: 'https://upload.wikimedia.org/wikipedia/commons/2/2e/Tiger_Hill_sunrise_point%2C_Darjeeling.jpg',
+  range: 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Kanchenjunga_range_from_Tiger_Hill%2C_Darjeeling.jpg'
+};
+
+const touristAttraction = {
+  '@context': 'https://schema.org',
+  '@type': 'TouristAttraction',
+  name: 'Tiger Hill Observatory / Sunrise Viewpoint',
+  alternateName: 'टाइगर हिल सनराइज अब्जर्भेटरी',
+  description: pageDescription,
+  telephone: '+91 1800 212 1655',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Senchal Rd, Senchal Forest',
+    addressRegion: 'West Bengal',
+    postalCode: '734102',
+    addressCountry: 'IN'
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 26.994830356553706,
+    longitude: 88.28265887709146
+  },
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    opens: '03:00',
+    closes: '17:00'
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.5',
+    reviewCount: '18354'
+  },
+  ...(pageUrl ? { url: pageUrl } : {})
+};
+
+const faqItems = [
+  {
+    q: 'सूर्योदय हेर्न कति बजे पुग्नु राम्रो हुन्छ?',
+    a: 'भीड र सडकको अवस्था हेर्दा सूर्योदयभन्दा धेरै अगाडि पुग्नु राम्रो हुन्छ। धेरै यात्रु दार्जिलिङबाट करिब ३:००–३:३० बजेतिर निस्कन्छन्। मौसम र स्थानीय सवारी नियम परिवर्तन हुन सक्ने भएकाले अघिल्लो साँझ चालक वा होटलसँग समय पक्का गर्नुहोस्।'
+  },
+  {
+    q: 'कञ्चनजङ्घा सधैं देखिन्छ?',
+    a: 'होइन। दृश्य बादल, कुहिरो र मौसमी अवस्थामाथि निर्भर हुन्छ। सफा बिहानमा कञ्चनजङ्घाको शृङ्खलामाथि पहिलो प्रकाश देखिनु यहाँको मुख्य आकर्षण हो।'
+  },
+  {
+    q: 'टिकट वा सवारी शुल्क कति लाग्छ?',
+    a: 'प्रवेश, सवारी कुपन, पार्किङ वा अब्जर्भेटरीका शुल्क समयसँगै बदलिन सक्छन्। पुराना यात्रामार्गदर्शकमा छुट्टाछुट्टै सवारी र बैठक शुल्क उल्लेख छन्, तर तिनलाई वर्तमान आधिकारिक दर नमान्नुहोस्—त्यही दिन स्थानीय रूपमा पुष्टि गर्नुहोस्।'
+  },
+  {
+    q: 'आफ्नै गाडी लिएर जान मिल्छ?',
+    a: 'सूर्योदय समयमा सवारी नियन्त्रण, कुपन वा प्रवेश कट-अफ लागू हुन सक्छ। निजी वा सेल्फ-ड्राइभ गाडीका नियम पनि बदलिन सक्छन्, त्यसैले स्थानीय चालक प्रयोग गर्नु वा दार्जिलिङ प्रहरी/पर्यटन स्रोतसँग अग्रिम पुष्टि गर्नु सुरक्षित हुन्छ।'
+  },
+  {
+    q: 'कति समय छुट्याउने?',
+    a: 'दृश्यस्थलमै करिब १.५–२ घण्टा राख्नु उपयुक्त हुन्छ। दार्जिलिङबाट आवतजावत, बिहानको ट्राफिक र बाटोमा घूम वा बतासिया लुप जोड्ने हो भने आधा दिन सहज हुन्छ।'
+  },
+  {
+    q: 'बच्चा वा ज्येष्ठ नागरिकसँग जान मिल्छ?',
+    a: 'मिल्छ, तर चिसो, भीड, उकालो हिँडाइ र अँध्यारोमा प्रतीक्षालाई ध्यान दिनुपर्छ। तातो कपडा, पानी र टर्च उपयोगी हुन्छन्। पार्किङ टाढा परेमा केही दूरी पैदल हिँड्नुपर्ने हुन सक्छ।'
+  }
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a
+    }
+  }))
+};
+---
+<!doctype html>
+<html lang="ne">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta name="theme-color" content="#10182d" />
+    <meta name="robots" content="index, follow" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="manifest" href="/site.webmanifest" />
+    {pageUrl && <link rel="canonical" href={pageUrl} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:locale" content="ne_IN" />
+    {pageUrl && <meta property="og:url" content={pageUrl} />}
+    {socialImage && <meta property="og:image" content={socialImage} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    {socialImage && <meta name="twitter:image" content={socialImage} />}
+    <script type="application/ld+json" set:html={JSON.stringify(touristAttraction)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </head>
+  <body>
+    <header class="hero" id="top">
+      <div class="hero-media" aria-hidden="true">
+        <img src={images.hero} alt="" width="1600" height="1067" fetchpriority="high" decoding="async" />
+      </div>
+      <div class="site-shell hero-grid">
+        <nav class="nav" aria-label="मुख्य नेभिगेसन">
+          <a href="#top" aria-label="टाइगर हिल मुख्य पृष्ठ"><img src="/logo.svg" alt="टाइगर हिल सनराइज" width="280" height="72" /></a>
+          <div class="nav-links">
+            <a href="#experience">सूर्योदय</a>
+            <a href="#plan">योजना</a>
+            <a href="#route">यातायात</a>
+            <a href="#nearby">वरिपरि</a>
+            <a href="#map">नक्सा</a>
+          </div>
+        </nav>
+
+        <div class="hero-copy">
+          <p class="eyebrow hero-kicker">Senchal Forest · Darjeeling</p>
+          <h1>पहिलो उज्यालो<br />हिमालमा पर्छ।</h1>
+          <p class="hero-lede">टाइगर हिलमा सूर्योदय आफैंभन्दा पहिले कञ्चनजङ्घाका चुचुरा उज्यालिन्छन्। चिसो, कुहिरो र अँध्यारो पार गरेर आउने त्यो केही मिनेट नै यहाँको यात्रा हो।</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#plan">बिहानको योजना हेर्नुहोस् <span aria-hidden="true">→</span></a>
+            <a class="btn btn-ghost" href="https://maps.app.goo.gl/xpAf5Rx8gtBy7gkN9" target="_blank" rel="noreferrer">Google Maps खोल्नुहोस्</a>
+          </div>
+        </div>
+
+        <div class="hero-strip" aria-label="छोटो जानकारी">
+          <div class="stat"><small>Google मूल्याङ्कन</small><strong>4.5 / 5 · 18,354 समीक्षा</strong></div>
+          <div class="stat"><small>उचाइ</small><strong>करिब 2,590 मिटर</strong></div>
+          <div class="stat"><small>सूचीबद्ध समय</small><strong>03:00–17:00 · परिवर्तन सम्भव</strong></div>
+          <div class="stat"><small>स्थान</small><strong>सेन्चल फरेस्ट, दार्जिलिङ</strong></div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="dawn-band" id="experience">
+        <div class="site-shell dawn-layout">
+          <div>
+            <p class="eyebrow" style="color:var(--dawn)">सूर्योदयको क्रम</p>
+            <h2 class="section-title">अँध्यारोबाट<br />हिमालको सुनौलो धारसम्म</h2>
+            <p class="copy">टाइगर हिलको अनुभव घडीभन्दा मौसमले तय गर्छ। सफा क्षितिज भएको बिहानमा कञ्चनजङ्घा सूर्योदयअघि नै गुलाबी–सुनौलो देखिन थाल्छ; धेरै सफा अवस्थामा टाढा सगरमाथा क्षेत्रसमेत देखिन सक्छ।</p>
+            <div class="timeline">
+              <div class="timeline-item"><time>03:00</time><div><strong>दार्जिलिङबाट प्रस्थान</strong><br /><span class="copy">उच्च सिजनमा भीडलाई समय दिनुहोस्।</span></div></div>
+              <div class="timeline-item"><time>04:00+</time><div><strong>दृश्यस्थलमा ठाउँ रोज्नुहोस्</strong><br /><span class="copy">अँध्यारो, चिसो र हावाका लागि तयार हुनुहोस्।</span></div></div>
+              <div class="timeline-item"><time>उषाकाल</time><div><strong>पहिलो प्रकाश कञ्चनजङ्घामा</strong><br /><span class="copy">सूर्य देखिनुअघि चुचुराहरू रंग बदल्न सक्छन्।</span></div></div>
+            </div>
+          </div>
+          <figure class="photo-card">
+            <img src={images.sunrise} alt="टाइगर हिलबाट देखिएको सूर्योदय" width="1200" height="1600" loading="lazy" decoding="async" />
+            <figcaption class="photo-credit">Mouli Ghosh · CC BY-SA 4.0</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="info-section" id="plan">
+        <div class="site-shell">
+          <div class="info-head">
+            <div>
+              <p class="eyebrow">बिहानको व्यावहारिक योजना</p>
+              <h2 class="section-title">पहिले तयारी,<br />पछि दृश्य।</h2>
+            </div>
+            <p class="copy">यहाँको मुख्य चुनौती टिकटभन्दा चिसो, बादल र सूर्योदयअघिको ट्राफिक हो। समय, शुल्क र सवारी नियम बदलिन सक्छन्; त्यसैले तलको योजना स्थिर नियम होइन, यात्रा तयार पार्ने व्यावहारिक ढाँचा हो।</p>
+          </div>
+
+          <div class="cards">
+            <article class="card">
+              <div class="num">01</div>
+              <h3>उत्तम समय</h3>
+              <p><span class="highlight">अक्टोबर–नोभेम्बर र मार्च–मे</span> सफा दृश्यका लागि लोकप्रिय अवधि मानिन्छन्। तर कुनै मौसमले दृश्यको ग्यारेन्टी गर्दैन; अघिल्लो रात बादल र वर्षा पूर्वानुमान हेर्नुहोस्।</p>
+            </article>
+            <article class="card">
+              <div class="num">02</div>
+              <h3>सुझाइएको बसाइ</h3>
+              <p>दृश्यस्थलमा <span class="highlight">१.५–२ घण्टा</span> राख्नुहोस्। सूर्योदयपछि भीड घटेपछि दृश्य र फोटोका लागि केही अतिरिक्त समय उपयोगी हुन्छ।</p>
+            </article>
+            <article class="card">
+              <div class="num">03</div>
+              <h3>टिकट / शुल्क</h3>
+              <p>सवारी प्रवेश, कुपन, पार्किङ र अब्जर्भेटरी शुल्क <span class="highlight">परिवर्तनशील</span> हुन सक्छन्। अनलाइन पुराना दरलाई हालको आधिकारिक दर नमान्नुहोस्; चालक वा स्थानीय काउन्टरमा त्यही दिन पुष्टि गर्नुहोस्।</p>
+            </article>
+            <article class="card">
+              <div class="num">04</div>
+              <h3>के लगाउने</h3>
+              <p>बिहानको तापक्रम दार्जिलिङ शहरभन्दा बढी चिसो महसुस हुन सक्छ। तहदार ज्याकेट, टोपी, हातमोजा र ग्रिप भएको जुत्ता उपयोगी हुन्छ।</p>
+            </article>
+            <article class="card">
+              <div class="num">05</div>
+              <h3>पार्किङ</h3>
+              <p>शिखर नजिक पार्किङ <span class="highlight">सीमित र भीडभाडयुक्त</span> हुन सक्छ। जामका बेला गाडी तल रोकिएर केही दूरी उकालो हिँड्नुपर्ने सम्भावना राख्नुहोस्।</p>
+            </article>
+            <article class="card">
+              <div class="num">06</div>
+              <h3>दृश्य असफल भए?</h3>
+              <p>कुहिरोले हिमाल छोपे पनि दार्जिलिङ फर्कँदा घूम, बतासिया लुप वा सेन्चल क्षेत्र जोडेर बिहानको यात्रा उपयोगी बनाउन सकिन्छ।</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="split-photo">
+        <img src={images.range} alt="टाइगर हिलबाट देखिएको कञ्चनजङ्घा हिमशृङ्खला" width="1600" height="1067" loading="lazy" decoding="async" />
+        <div class="split-copy">
+          <p class="eyebrow">दृश्य पढ्ने तरिका</p>
+          <h2 class="section-title">सूर्यतिर होइन,<br />पहिले हिमालतिर हेर्नुहोस्।</h2>
+          <p class="copy">टाइगर हिलको विशेषता यही हो: क्षितिजबाट सूर्य निस्किनुअघि कञ्चनजङ्घाको बरफले प्रकाश समात्छ। राम्रो दृश्यको दिन फोटो खिच्ने क्रम पनि उल्टो राख्नुहोस्—पहिले हिमशृङ्खला, त्यसपछि सूर्योदय।</p>
+        </div>
+      </section>
+
+      <section class="route" id="route">
+        <div class="site-shell route-grid">
+          <div>
+            <p class="eyebrow">विस्तृत यातायात</p>
+            <h2 class="section-title">दार्जिलिङबाट<br />रातमै यात्रा सुरु हुन्छ।</h2>
+            <p class="copy">टाइगर हिल दार्जिलिङ शहरबाट करिब ११ किमि टाढा छ। सूर्योदय यात्राका लागि स्थानीय रिजर्भ ट्याक्सी वा साझा गाडी सामान्य विकल्प हुन्।</p>
+            <div class="notice"><strong>महत्त्वपूर्ण:</strong> सूर्योदय समयमा सवारी कुपन, संख्या सीमा वा प्रवेश कट-अफ लागू हुन सक्छ। नियम समयअनुसार फेरिन सक्छ; अघिल्लो साँझ होटल/चालकसँग हालको व्यवस्था पुष्टि गर्नुहोस्।</div>
+          </div>
+          <div class="route-list">
+            <div class="route-row"><strong>दार्जिलिङ</strong><div><b>स्थानीय ट्याक्सी / साझा गाडी</b><br /><span class="copy">सामान्यतया सबेरै प्रस्थान। ट्राफिक र जाँचका लागि अतिरिक्त समय राख्नुहोस्।</span></div></div>
+            <div class="route-row"><strong>NJP</strong><div><b>न्यु जलपाइगुडी रेलवे स्टेशन</b><br /><span class="copy">पहिले दार्जिलिङ पुगेर बस्नु सबैभन्दा सहज; जिल्ला पर्यटन स्रोतले दार्जिलिङसम्म करिब ८८ किमि बताउँछ।</span></div></div>
+            <div class="route-row"><strong>IXB</strong><div><b>बागडोगरा विमानस्थल</b><br /><span class="copy">दार्जिलिङतर्फ सडकमार्ग; जिल्ला स्रोतमा दूरी करिब ९० किमि उल्लेख छ।</span></div></div>
+            <div class="route-row"><strong>फर्कँदा</strong><div><b>घूम → बतासिया लुप</b><br /><span class="copy">सूर्योदयपछि फर्कने बाटोमा सहजै जोड्न सकिने लोकप्रिय क्रम।</span></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="gallery" aria-labelledby="gallery-title">
+        <div class="site-shell">
+          <p class="eyebrow">वास्तविक दृश्य</p>
+          <h2 class="section-title" id="gallery-title" style="margin-bottom:38px">कुहिरो खुल्यो भने<br />दृश्यको स्केल बदलिन्छ।</h2>
+          <div class="gallery-grid">
+            <figure><img src={images.viewpoint} alt="टाइगर हिल सनराइज भ्यू-पोइन्टको वास्तविक दृश्य" width="1600" height="1067" loading="lazy" decoding="async" /><figcaption class="photo-credit">Aditya thaokar · CC BY-SA 3.0</figcaption></figure>
+            <figure><img src={images.hero} alt="टाइगर हिलबाट बिहानको कञ्चनजङ्घा" width="1600" height="1067" loading="lazy" decoding="async" /><figcaption class="photo-credit">Jejsiguoa · CC BY-SA 4.0</figcaption></figure>
+            <figure><img src={images.range} alt="टाइगर हिलबाट कञ्चनजङ्घा शृङ्खला" width="1600" height="1067" loading="lazy" decoding="async" /><figcaption class="photo-credit">Jejsiguoa · CC BY-SA 4.0</figcaption></figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="nearby" id="nearby">
+        <div class="site-shell">
+          <p class="eyebrow">वरिपरिका स्थान</p>
+          <h2 class="section-title">सूर्योदयपछि<br />बिहान अझै बाँकी हुन्छ।</h2>
+          <div class="nearby-grid">
+            <article class="nearby-card"><span>रेलवे ल्यान्डमार्क</span><h3>बतासिया लुप</h3><p>दार्जिलिङ हिमालयन रेलवेको गोलाकार ट्र्याक, युद्ध स्मारक र खुला हिमाली दृश्य। फर्कने बाटोमा सहज स्टप।</p></article>
+            <article class="nearby-card"><span>घूम क्षेत्र</span><h3>सम्टेन छोलिङ / घूम</h3><p>टाइगर हिलबाट फर्कँदा घूम क्षेत्रका गुम्बा जोड्न सकिन्छ। बिहानको चिसोपछि शान्त, छोटो सांस्कृतिक विराम।</p></article>
+            <article class="nearby-card"><span>वन र जलाशय</span><h3>सेन्चल क्षेत्र</h3><p>सेन्चल वन्यजन्तु अभयारण्य र सेन्चल ताल क्षेत्र पहाडी वनको अर्को रूप देखाउने नजिकको प्राकृतिक विकल्प हो।</p></article>
+          </div>
+
+          <div class="info-head" style="margin-top:90px;margin-bottom:34px">
+            <div><p class="eyebrow">वरिपरि खानपान</p><h2 class="section-title">चिसो बिहानपछि<br />तातो स्वाद।</h2></div>
+            <p class="copy">सूर्योदय यात्रापछि घूम–बतासिया क्षेत्रमा तातो चिया, मोमो, थुक्पा, चाउमिन र सानो नास्ता सजिलो विकल्प हुन्। बतासिया आसपासको स्थानीय बजारमा सिङ्गारा/समोसा जस्ता नास्ता पनि पाइन्छ। खुल्ने समय बिहानअनुसार फरक हुन सक्छ।</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="map-section" id="map">
+        <div class="site-shell">
+          <p class="eyebrow">स्थान</p>
+          <h2 class="section-title" style="margin-bottom:34px">Senchal Rd,<br />Senchal Forest</h2>
+          <div class="map-wrap">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6323.2950556703145!2d88.28265887709146!3d26.994830356553706!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e42fcb31e0451b%3A0x4b9ef68840f1a28d!2sTiger%20Hill%20Observatory%2F%20Sunrise%20Viewpoint!5e1!3m2!1sne!2sin!4v1789018848617!5m2!1sne!2sin"
+              title="टाइगर हिल सनराइज अब्जर्भेटरी Google नक्सा"
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen></iframe>
+          </div>
+          <p class="copy" style="margin-top:16px">ठेगाना: Senchal Rd, Senchal Forest, West Bengal 734102, India · फोन: <a href="tel:+9118002121655">+91 1800 212 1655</a></p>
+        </div>
+      </section>
+
+      <section class="faq" id="faq">
+        <div class="site-shell faq-layout">
+          <div>
+            <p class="eyebrow" style="color:var(--dawn)">FAQ</p>
+            <h2 class="section-title">जानेअघि<br />जान्नुपर्ने कुरा</h2>
+            <p class="copy">टाइगर हिलको अनुभव मौसम र स्थानीय यातायात व्यवस्थामा धेरै निर्भर हुन्छ। परिवर्तनशील जानकारीलाई प्रस्थानअघि फेरि पक्का गर्नुहोस्।</p>
+          </div>
+          <div>
+            {faqItems.map((item, index) => (
+              <details open={index === 0}>
+                <summary>{item.q}</summary>
+                <p>{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="site-shell">
+        <div class="footer-grid">
+          <div>
+            <img src="/logo.svg" alt="टाइगर हिल सनराइज" width="280" height="72" loading="lazy" />
+            <p>सूर्योदयअघि हिमाल उज्यालो हुने दार्जिलिङको पहाडी दृश्यस्थल।</p>
+          </div>
+          <div>
+            <p><a href="https://darjeeling.gov.in/tourist-place/tiger-hill/" target="_blank" rel="noreferrer">दार्जिलिङ जिल्ला पर्यटन स्रोत</a> · <a href="https://maps.app.goo.gl/xpAf5Rx8gtBy7gkN9" target="_blank" rel="noreferrer">Google Maps</a></p>
+            <p><button type="button" id="cookie-settings">कुकी सेटिङ</button> · गोपनीयता: आवश्यक स्थानीय स्टोरेज बाहेक Analytics तपाईंको सहमतिपछि मात्र लोड हुन्छ।</p>
+          </div>
+        </div>
+        <p class="disclaimer">यो वेबसाइट अनौपचारिक यात्रा मार्गदर्शिका हो र Tiger Hill, स्थानीय प्रशासन वा Google सँग आधिकारिक रूपमा सम्बद्ध छैन। समय, शुल्क, पहुँच, सवारी नियम र मौसमसम्बन्धी जानकारी प्रस्थानअघि स्थानीय स्रोतसँग पुष्टि गर्नुहोस्।</p>
+      </div>
+    </footer>
+
+    <div class="cookie-panel" id="cookie-panel" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-copy" hidden>
+      <h2 id="cookie-title">Analytics कुकी अनुमति</h2>
+      <p id="cookie-copy">तपाईंले अनुमति दिएपछि मात्र Google Analytics 4 (G-HXM22WWPKP) लोड हुन्छ। अस्वीकार गरेमा साइटका मुख्य सामग्री र नक्सा प्रयोगमा असर पर्दैन।</p>
+      <div class="cookie-actions">
+        <button class="cookie-accept" type="button" data-consent="yes">अनुमति दिनुहोस्</button>
+        <button class="cookie-reject" type="button" data-consent="no">अस्वीकार गर्नुहोस्</button>
+      </div>
+    </div>
+
+    <script is:inline>
+      (() => {
+        const storageKey = 'tiger-hill-ga-consent';
+        const panel = document.getElementById('cookie-panel');
+        const settings = document.getElementById('cookie-settings');
+        let gaLoaded = false;
+
+        const loadGA = () => {
+          if (gaLoaded) return;
+          gaLoaded = true;
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){ window.dataLayer.push(arguments); }
+          window.gtag = gtag;
+          gtag('js', new Date());
+          gtag('config', 'G-HXM22WWPKP', { anonymize_ip: true });
+          const script = document.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=G-HXM22WWPKP';
+          document.head.appendChild(script);
+        };
+
+        const saved = localStorage.getItem(storageKey);
+        if (saved === 'yes') loadGA();
+        if (!saved && panel) panel.hidden = false;
+
+        panel?.querySelectorAll('[data-consent]').forEach((button) => {
+          button.addEventListener('click', () => {
+            const value = button.getAttribute('data-consent');
+            if (!value) return;
+            localStorage.setItem(storageKey, value);
+            if (value === 'yes') loadGA();
+            panel.hidden = true;
+          });
+        });
+
+        settings?.addEventListener('click', () => {
+          if (panel) panel.hidden = false;
+        });
+      })();
+    </script>
+  </body>
+</html>
