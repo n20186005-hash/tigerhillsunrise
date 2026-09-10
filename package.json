@@ -13,6 +13,7 @@
     "check": "astro check",
     "build": "astro build",
     "preview": "astro preview",
+    "pwa:icons": "node scripts/make-pwa-icons.mjs",
     "deploy": "wrangler deploy"
   },
   "dependencies": {

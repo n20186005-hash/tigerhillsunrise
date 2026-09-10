@@ -2,13 +2,13 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-// साइटको वास्तविक डोमेन तय भएपछि यही एक ठाउँमा मात्र राख्नुहोस्।
-// डोमेन नहुँदा undefined नै राख्नुहोस्; canonical/OG URL र sitemap स्वतः सुरक्षित रूपमा हट्छन्।
-const site = undefined;
+// Canonical site origin for tigerhillsunrise.com. Single source of truth used
+// for canonical, og:url, JSON-LD urls, sitemap and absolute image URLs.
+const site = 'https://tigerhillsunrise.com';
 
 export default defineConfig({
   site,
-  integrations: site ? [sitemap()] : [],
+  integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()]
   },

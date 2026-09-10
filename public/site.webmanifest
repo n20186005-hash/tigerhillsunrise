@@ -1,12 +1,23 @@
 {
-  "name": "टाइगर हिल सनराइज",
+  "name": "Tiger Hill Observatory / Sunrise Viewpoint",
   "short_name": "Tiger Hill",
-  "icons": [
-    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
-    { "src": "/favicon-32x32.png", "sizes": "32x32", "type": "image/png" },
-    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
-  ],
+  "description": "Visitor guide to Tiger Hill Observatory / Sunrise Viewpoint in Darjeeling, West Bengal — Kanchenjunga sunrise, map, timings, nearby Batasia Loop and Ghoom Monastery.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "lang": "ne",
+  "dir": "ltr",
+  "display": "standalone",
+  "orientation": "portrait",
   "theme_color": "#10182d",
   "background_color": "#f3eee5",
-  "display": "standalone"
+  "categories": ["travel", "education"],
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/favicon-32x32.png", "sizes": "32x32", "type": "image/png", "purpose": "any" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
 }

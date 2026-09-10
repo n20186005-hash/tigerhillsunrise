@@ -53,6 +53,11 @@ img { display: block; width: 100%; }
 .hero-copy { align-self: center; max-width: 780px; padding-block: 72px; }
 .hero-kicker { color: var(--dawn-soft); margin-bottom: 18px; }
 .hero h1 { margin: 0 0 22px; font-size: clamp(3.5rem, 10vw, 8.7rem); line-height: .88; letter-spacing: -.06em; max-width: 840px; }
+/* Entity H1 is an official place name, not a slogan — scale it down so the
+   long English title + Devanagari sub-title stay inside the hero. */
+.hero h1.hero-title { font-size: clamp(2.35rem, 5.4vw, 4.7rem); line-height: 1.02; letter-spacing: -.03em; max-width: 940px; }
+.hero-title-sub { display: block; margin-top: 12px; font-size: .34em; font-weight: 600; color: var(--dawn-soft); letter-spacing: .01em; }
+section[id] { scroll-margin-top: 84px; }
 .hero-lede { max-width: 650px; font-size: clamp(1.08rem, 2.2vw, 1.42rem); color: rgba(255,250,241,.86); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
 .btn { display: inline-flex; align-items: center; gap: 9px; border-radius: 999px; padding: 12px 18px; text-decoration: none; font-weight: 800; font-size: .94rem; }
@@ -163,4 +168,69 @@ details p { color: rgba(255,250,241,.7); max-width: 700px; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
+}
+
+/* --- SEO entity binding additions (additive, do not override above) --- */
+.kicker-np { display: block; color: rgba(255,250,241,.72); font-size: .95rem; margin-top: 6px; font-weight: 600; letter-spacing: 0; }
+.dawn-band .kicker-np { color: rgba(255,250,241,.72); }
+.split-copy .kicker-np { color: #744c24; }
+.kicker-np-dark { display: block; color: var(--muted); font-size: .95rem; margin-top: 6px; font-weight: 600; letter-spacing: 0; }
+
+.about { padding: 110px 0; background: var(--snow); }
+/* New entity-bound H2s carry long official names — cap the scale so they wrap
+   tidily without overpowering the poetic Nepali headings elsewhere. */
+.about .section-title, .history .section-title, .sources .section-title { font-size: clamp(1.75rem, 3.4vw, 2.9rem); }
+.about-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 64px; align-items: start; }
+.about-lede p { font-size: 1.08rem; color: #2c3140; line-height: 1.75; }
+.about-lede p strong { color: var(--night); }
+.breadcrumb-trail { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 8px 12px; font-size: .86rem; color: var(--muted); align-items: center; }
+.breadcrumb-trail a { color: var(--night); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; }
+.breadcrumb-trail a:hover { border-bottom-color: var(--dawn); }
+.breadcrumb-trail .sep { color: rgba(25,33,49,.3); }
+.breadcrumb-trail .crumb-current { color: var(--night); font-weight: 700; }
+.quick-facts { background: var(--paper); border: 1px solid var(--line); border-radius: 22px; padding: 26px 28px; display: grid; gap: 16px; }
+.quick-facts h3 { margin: 0 0 4px; font-size: 1.05rem; }
+.quick-facts dl { margin: 0; display: grid; gap: 12px; }
+.quick-facts .row { display: grid; grid-template-columns: 130px 1fr; gap: 12px; align-items: baseline; padding-bottom: 10px; border-bottom: 1px dashed var(--line); }
+.quick-facts .row:last-child { border-bottom: 0; padding-bottom: 0; }
+.quick-facts dt { color: var(--muted); font-size: .82rem; }
+.quick-facts dd { margin: 0; color: var(--night); font-weight: 700; font-size: .98rem; }
+
+.history { padding: 110px 0; background: #ece4d7; }
+.history-grid { display: grid; grid-template-columns: 1fr; gap: 22px; max-width: 880px; }
+.history-grid p { color: #3a3f4d; font-size: 1.02rem; line-height: 1.78; margin: 0; }
+.history-grid p strong { color: var(--night); }
+.history-tl { margin-top: 32px; display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.history-tl .tl { background: var(--paper); border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px; }
+.history-tl .tl b { color: #5b3d20; display: block; margin-bottom: 4px; font-size: .82rem; letter-spacing: .12em; text-transform: uppercase; }
+.history-tl .tl span { color: var(--ink); font-weight: 700; display: block; margin-bottom: 6px; }
+.history-tl .tl p { color: var(--muted); font-size: .92rem; margin: 0; }
+
+.sources { padding: 110px 0; background: var(--night); color: var(--paper); }
+.sources .eyebrow { color: var(--dawn-soft); }
+.sources .section-title { color: var(--paper); }
+.sources .copy { color: rgba(255,250,241,.72); }
+.sources-list { display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: start; }
+.sources-list ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.sources-list li { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 16px 18px; }
+.sources-list li b { color: var(--dawn); display: block; margin-bottom: 4px; font-size: .9rem; }
+.sources-list li a { color: var(--paper); text-decoration: underline; word-break: break-all; }
+.sources-list li span { color: rgba(255,250,241,.6); font-size: .82rem; display: block; margin-top: 4px; }
+.sources-meta { font-size: .82rem; color: rgba(255,250,241,.55); margin-top: 26px; }
+.sources-meta b { color: var(--dawn-soft); }
+.photo-credit-line { margin-top: 18px; font-size: .8rem; color: rgba(255,250,241,.6); }
+.photo-credit-line a { color: var(--dawn-soft); }
+
+.nap-line { font-size: .9rem; color: rgba(255,250,241,.7); }
+.nap-line b { color: var(--paper); }
+.nap-line a { color: var(--dawn-soft); }
+
+.map-authority { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 16px; font-size: .88rem; color: var(--muted); }
+.map-authority a { color: var(--night); text-decoration: underline; text-underline-offset: 3px; font-weight: 700; }
+.map-authority .gov { background: var(--night); color: var(--dawn-soft); border-radius: 6px; padding: 2px 8px; font-size: .72rem; font-weight: 800; letter-spacing: .08em; margin-right: 4px; }
+
+@media (max-width: 900px) {
+  .about-grid, .sources-list { grid-template-columns: 1fr; }
+  .history-tl { grid-template-columns: 1fr; }
+  .quick-facts .row { grid-template-columns: 110px 1fr; }
 }
