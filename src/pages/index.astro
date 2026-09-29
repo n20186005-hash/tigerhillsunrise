@@ -24,12 +24,12 @@ const orgLogo = new URL('/icons/icon-512.png', SITE).toString();
 const pageTitle = `${ATTRACTION_FULL_NAME} (${CITY}) - Visitor Guide & Location`;
 const pageDescription = `Plan a visit to ${ATTRACTION_FULL_NAME} (${ATTRACTION_NP}) in ${CITY}, ${STATE}, ${COUNTRY}. Sunrise over Kanchenjunga, location map, timings, tickets, parking and nearby ${'Batasia Loop'} and ${'Ghoom Monastery'}.`;
 
-// --- Image sources (external Wikimedia Commons, CC-licensed) ---------------
+// --- Image sources (local Wikimedia Commons copies in public/images, CC-licensed) ---
 const images = {
-  hero: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Kanchenjunga_from_Tiger_Hill_at_dawn.jpg',
-  sunrise: 'https://upload.wikimedia.org/wikipedia/commons/d/d6/Sunrise_at_Tigerhill%2C_Darjeeling.jpg',
-  viewpoint: 'https://upload.wikimedia.org/wikipedia/commons/2/2e/Tiger_Hill_sunrise_point%2C_Darjeeling.jpg',
-  range: 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Kanchenjunga_range_from_Tiger_Hill%2C_Darjeeling.jpg'
+  hero: '/images/tiger-hill-kanchenjunga-dawn.jpg',
+  sunrise: '/images/tiger-hill-sunrise.jpg',
+  viewpoint: '/images/tiger-hill-viewpoint.jpg',
+  range: '/images/tiger-hill-kanchenjunga-range.jpg'
 };
 const imageAlts = {
   hero: `${ATTRACTION_FULL_NAME} - Dawn view of Kanchenjunga from ${CITY}, ${COUNTRY}`,
