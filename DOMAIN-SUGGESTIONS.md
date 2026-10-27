@@ -1,9 +1,5 @@
-# Domain suggestions
+# Domain
 
-Public web searches did not show indexed sites for these `.in` candidates at the time of research. Domain registration status can change at any moment, so verify live availability at the official .IN Registry / an accredited registrar immediately before purchase.
+Canonical origin: https://tigerhillsunrise.com/
 
-- tigerhillsunrise.in
-- tigerhilldarjeeling.in
-- dawnattigerhill.in
-- tigerhillview.in
-- kanchenjungadawn.in
+The exact www hostname is handled as an alias by the Worker; production bindings and both protocols require separate verification.

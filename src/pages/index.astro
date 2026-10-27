@@ -1,623 +1,83 @@
 ---
 import '../styles/global.css';
-
 const SITE = 'https://tigerhillsunrise.com';
-const ATTRACTION_FULL_NAME = 'Tiger Hill Observatory / Sunrise Viewpoint';
-const ATTRACTION_SHORT_NAME = 'Tiger Hill';
-const ATTRACTION_NP = 'टाइगर हिल सनराइज अब्जर्भेटरी';
-const CITY = 'Darjeeling';
-const STATE = 'West Bengal';
-const COUNTRY = 'India';
-const POSTAL = '734102';
-const LAT = 26.994830356553706;
-const LNG = 88.28265887709146;
-const MAPS_SHARE = 'https://maps.app.goo.gl/xpAf5Rx8gtBy7gkN9';
-const MAPS_EMBED = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6323.2950556703145!2d88.28265887709146!3d26.994830356553706!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e42fcb31e0451b%3A0x4b9ef68840f1a28d!2sTiger%20Hill%20Observatory%2F%20Sunrise%20Viewpoint!5e1!3m2!1sne!2sin!4v1789018848617!5m2!1sne!2sin';
-const PHONE = '+91 1800 212 1655';
-const LAST_UPDATED = '2026-09-10';
-
-const pageUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).toString() : `${SITE}/`;
-const heroImage = new URL('/images/tiger-hill-kanchenjunga-dawn.jpg', SITE).toString();
-const orgLogo = new URL('/icons/icon-512.png', SITE).toString();
-
-// --- TDK --------------------------------------------------------------------
-const pageTitle = `${ATTRACTION_FULL_NAME} (${CITY}) - Visitor Guide & Location`;
-const pageDescription = `Plan a visit to ${ATTRACTION_FULL_NAME} (${ATTRACTION_NP}) in ${CITY}, ${STATE}, ${COUNTRY}. Sunrise over Kanchenjunga, location map, timings, tickets, parking and nearby ${'Batasia Loop'} and ${'Ghoom Monastery'}.`;
-
-// --- Image sources (local Wikimedia Commons copies in public/images, CC-licensed) ---
-const images = {
-  hero: '/images/tiger-hill-kanchenjunga-dawn.jpg',
-  sunrise: '/images/tiger-hill-sunrise.jpg',
-  viewpoint: '/images/tiger-hill-viewpoint.jpg',
-  range: '/images/tiger-hill-kanchenjunga-range.jpg'
+const NAME = 'Tiger Hill Observatory / Sunrise Viewpoint';
+const LAT = 26.9948256;
+const LNG = 88.2852338;
+const CHECKED = '2026-10-26';
+const MAP = 'https://maps.app.goo.gl/xpAf5Rx8gtBy7gkN9';
+// The original embed's feature ID matches the checked Observatory listing.
+const EMBED = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6323.2950556703145!2d88.2852338!3d26.9948256!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e42fcb31e0451b%3A0x4b9ef68840f1a28d!2sTiger%20Hill%20Observatory%2F%20Sunrise%20Viewpoint!5e1!3m2!1sne!2sin';
+const title = 'टाइगर हिल सूर्योदय, दार्जिलिङ — स्थान, समय र यात्रा तयारी';
+const description = 'दार्जिलिङको Tiger Hill Observatory कहाँ छ? कञ्चनजङ्घाको दृश्य, नक्सा, सूचीकृत समय, पुष्टि गर्नुपर्ने शुल्क र सवारी व्यवस्था, ऐतिहासिक फोटो र स्रोतसहित नेपाली भ्रमण मार्गदर्शिका।';
+const district = 'https://darjeeling.gov.in/tourist-place/tiger-hill/';
+const ministry = 'https://www.incredibleindia.gov.in/en/west-bengal/darjeeling/tiger-hill';
+const photos = {
+ dawn: {src:'/images/tiger-hill-kanchenjunga-dawn.jpg', alt:'टाइगर हिलबाट बिहानको उज्यालोमा कञ्चनजङ्घा शृङ्खला', width:2552,height:1775,author:'Jejsiguoa',date:'2021-06-03',license:'CC BY-SA 4.0',licenseURL:'https://creativecommons.org/licenses/by-sa/4.0/',source:'https://commons.wikimedia.org/wiki/File:Kanchenjunga_from_Tiger_Hill_at_dawn.jpg'},
+ sunrise: {src:'/images/tiger-hill-sunrise.jpg',alt:'बादलको क्षितिजबाट उदाउँदै गरेको सूर्य, टाइगर हिलबाट कञ्चनजङ्घाको विपरीत दिशाको दृश्य',width:3696,height:2448,author:'Mouli Ghosh',date:'2016-11-10',license:'CC BY-SA 4.0',licenseURL:'https://creativecommons.org/licenses/by-sa/4.0/',source:'https://commons.wikimedia.org/wiki/File:Sunrise_at_Tigerhill,_Darjeeling.jpg'},
+ viewpoint: {src:'/images/tiger-hill-viewpoint.jpg',alt:'टाइगर हिलबाट देखिने बादल र उज्यालो क्षितिजको ऐतिहासिक फोटो',width:1536,height:2048,author:'Aditya thaokar',date:'2011-05-31',license:'CC BY-SA 3.0',licenseURL:'https://creativecommons.org/licenses/by-sa/3.0/',source:'https://commons.wikimedia.org/wiki/File:Tiger_Hill_sunrise_point,_Darjeeling.jpg'},
+ range: {src:'/images/tiger-hill-kanchenjunga-range.jpg',alt:'टाइगर हिलबाट कञ्चनजङ्घा हिमशृङ्खला र अगाडिका पहाडहरूको फराकिलो दृश्य',width:2519,height:1699,author:'Jejsiguoa',date:'2021-06-03',license:'CC BY-SA 4.0',licenseURL:'https://creativecommons.org/licenses/by-sa/4.0/',source:'https://commons.wikimedia.org/wiki/File:Kanchenjunga_range_from_Tiger_Hill,_Darjeeling.jpg'}
 };
-const imageAlts = {
-  hero: `${ATTRACTION_FULL_NAME} - Dawn view of Kanchenjunga from ${CITY}, ${COUNTRY}`,
-  sunrise: `${ATTRACTION_FULL_NAME} - First sunrise light over the Himalayas in ${CITY}`,
-  viewpoint: `${ATTRACTION_SHORT_NAME} sunrise viewpoint in ${CITY} - main viewing platform`,
-  range: `${ATTRACTION_FULL_NAME} - Panoramic view of the Kanchenjunga range from ${CITY}`
-};
-
-// --- JSON-LD @graph ---------------------------------------------------------
-const attractionId = `${SITE}/#attraction`;
-const organizationId = `${SITE}/#organization`;
-const websiteId = `${SITE}/#website`;
-
-const webSiteNode = {
-  '@type': 'WebSite',
-  '@id': websiteId,
-  url: SITE,
-  name: `${ATTRACTION_FULL_NAME} - Visitor Guide (${CITY})`,
-  inLanguage: 'ne',
-  publisher: { '@id': organizationId }
-};
-const organizationNode = {
-  '@type': 'Organization',
-  '@id': organizationId,
-  name: 'tigerhillsunrise.com',
-  url: SITE,
-  logo: { '@type': 'ImageObject', url: orgLogo, width: 512, height: 512 }
-};
-const webPageNode = {
-  '@type': 'WebPage',
-  '@id': `${pageUrl}#webpage`,
-  url: pageUrl,
-  name: pageTitle,
-  description: pageDescription,
-  inLanguage: 'ne',
-  isPartOf: { '@id': websiteId },
-  about: { '@id': attractionId },
-  primaryImageOfPage: { '@type': 'ImageObject', url: heroImage },
-  datePublished: '2026-09-10',
-  dateModified: LAST_UPDATED,
-  publisher: { '@id': organizationId }
-};
-const attractionNode = {
-  '@context': 'https://schema.org',
-  '@type': 'TouristAttraction',
-  '@id': attractionId,
-  name: ATTRACTION_FULL_NAME,
-  alternateName: [
-    ATTRACTION_SHORT_NAME,
-    'Tiger Hill Sunrise',
-    `${CITY} ${ATTRACTION_FULL_NAME}`,
-    ATTRACTION_NP
-  ],
-  description:
-    `${ATTRACTION_FULL_NAME} is a celebrated Himalayan sunrise viewpoint at 2,590 m (8,482 ft) in Senchal Forest above ${CITY}, ${STATE}, ${COUNTRY}, famed for the first light striking Mount Kanchenjunga at dawn.`,
-  url: pageUrl,
-  image: [heroImage],
-  isAccessibleForFree: true,
-  publicAccess: true,
-  telephone: PHONE,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'Senchal Rd, Senchal Forest',
-    addressLocality: CITY,
-    addressRegion: STATE,
-    postalCode: POSTAL,
-    addressCountry: 'IN'
-  },
-  geo: { '@type': 'GeoCoordinates', latitude: LAT, longitude: LNG },
-  hasMap: MAPS_SHARE,
-  sameAs: [
-    MAPS_SHARE,
-    'https://darjeeling.gov.in/tourist-place/tiger-hill/',
-    'https://www.incredibleindia.gov.in/en/west-bengal/darjeeling/tiger-hill',
-    'https://www.wbtourism.gov.in/',
-    'https://en.wikipedia.org/wiki/Tiger_Hill,_Darjeeling'
-  ],
-  openingHoursSpecification: {
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-    opens: '03:00',
-    closes: '17:00'
-  },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.5',
-    reviewCount: '18354',
-    bestRating: '5',
-    worstRating: '1'
-  },
-  touristType: ['Viewpoint', 'Observatory'],
-  containedInPlace: { '@type': 'Place', name: 'Senchal Wildlife Sanctuary, Darjeeling' }
-};
-const breadcrumbNode = {
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE + '/' },
-    { '@type': 'ListItem', position: 2, name: `${CITY}, ${STATE}`, item: `${SITE}/#location` },
-    { '@type': 'ListItem', position: 3, name: ATTRACTION_FULL_NAME, item: pageUrl }
-  ]
-};
-
-// --- FAQ (8 items, visible copy matches schema) ----------------------------
-const faqItems = [
-  {
-    q: 'सूर्योदय हेर्न कति बजे पुग्नु राम्रो हुन्छ?',
-    a: 'भीड र सडकको अवस्था हेर्दा सूर्योदयभन्दा धेरै अगाडि पुग्नु राम्रो हुन्छ। धेरै यात्रु दार्जिलिङबाट करिब ३:००–३:३० बजेतिर निस्कन्छन्। मौसम र स्थानीय सवारी नियम परिवर्तन हुन सक्ने भएकाले अघिल्लो साँझ चालक वा होटलसँग समय पक्का गर्नुहोस्।'
-  },
-  {
-    q: 'कञ्चनजङ्घा सधैं देखिन्छ?',
-    a: 'होइन। दृश्य बादल, कुहिरो र मौसमी अवस्थामाथि निर्भर हुन्छ। सफा बिहानमा कञ्चनजङ्घाको शृङ्खलामाथि पहिलो प्रकाश देखिनु यहाँको मुख्य आकर्षण हो।'
-  },
-  {
-    q: 'टिकट वा सवारी शुल्क कति लाग्छ?',
-    a: 'प्रवेश, सवारी कुपन, पार्किङ वा अब्जर्भेटरीका शुल्क समयसँगै बदलिन सक्छन्। पुराना यात्रामार्गदर्शकमा छुट्टाछुट्टै सवारी र बैठक शुल्क उल्लेख छन्, तर तिनलाई वर्तमान आधिकारिक दर नमान्नुहोस्—त्यही दिन स्थानीय रूपमा पुष्टि गर्नुहोस्।'
-  },
-  {
-    q: 'आफ्नै गाडी लिएर जान मिल्छ?',
-    a: 'सूर्योदय समयमा सवारी नियन्त्रण, कुपन वा प्रवेश कट-अफ लागू हुन सक्छ। निजी वा सेल्फ-ड्राइभ गाडीका नियम पनि बदलिन सक्छन्, त्यसैले स्थानीय चालक प्रयोग गर्नु वा दार्जिलिङ प्रहरी/पर्यटन स्रोतसँग अग्रिम पुष्टि गर्नु सुरक्षित हुन्छ।'
-  },
-  {
-    q: 'कति समय छुट्याउने?',
-    a: 'दृश्यस्थलमै करिब १.५–२ घण्टा राख्नु उपयुक्त हुन्छ। दार्जिलिङबाट आवतजावत, बिहानको ट्राफिक र बाटोमा घूम वा बतासिया लुप जोड्ने हो भने आधा दिन सहज हुन्छ।'
-  },
-  {
-    q: 'बच्चा वा ज्येष्ठ नागरिकसँग जान मिल्छ?',
-    a: 'मिल्छ, तर चिसो, भीड, उकालो हिँडाइ र अँध्यारोमा प्रतीक्षालाई ध्यान दिनुपर्छ। तातो कपडा, पानी र टर्च उपयोगी हुन्छन्। पार्किङ टाढा परेमा केही दूरी पैदल हिँड्नुपर्ने हुन सक्छ।'
-  },
-  {
-    q: `${ATTRACTION_FULL_NAME} कहाँ अवस्थित छ?`,
-    a: `${ATTRACTION_FULL_NAME} सेन्चल रोड, सेन्चल फरेस्ट, ${CITY}, ${STATE} ${POSTAL}, ${COUNTRY} मा अवस्थित छ। दार्जिलिङ शहरबाट करिब ११ किमि उत्तरमा रहेको यो दृश्यस्थल सेन्चल वन्यजन्तु अभयारण्यभित्र पर्छ।`
-  },
-  {
-    q: `${ATTRACTION_SHORT_NAME} भ्रमण निःशुल्क छ?`,
-    a: 'खुला सूर्योदय दृश्यस्थल सार्वजनिक ठाउँ हो र प्रवेश सामान्यतया निःशुल्क छ। तर सवारी कुपन, पार्किङ र अब्जर्भेटरी डेकको छुट्टै टिकट लाग्न सक्छ; हालको दर स्थानीय काउन्टर वा अधिकारिक स्रोतमा पुष्टि गर्नुहोस्।'
-  }
+const faqs = [
+ {q:'टाइगर हिल कहाँ छ?',a:'यो दार्जिलिङ, पश्चिम बङ्गालको सेन्चल क्षेत्रको सूर्योदय दृश्यस्थल हो। यहाँको नक्सा Senchal Rd मा रहेको Tiger Hill Observatory / Sunrise Viewpoint कै हो; दार्जिलिङको अलग Observatory Hill सँग नझुक्किनुहोस्।'},
+ {q:'सूर्योदय हेर्न कुन समयमा जानुपर्छ?',a:'सूर्योदयको समय मिति अनुसार बदलिन्छ। Incredible India ले व्यस्त समयमा निकै सबेरै पुग्ने सुझाव दिएको छ, तर त्यो सडक खुल्ने वा प्रवेश पाउने आदेश होइन। रोजेको मितिको सूर्योदय, पहुँच नियम र चालकको योजना अघिल्लो दिन मिलाउनुहोस्।'},
+ {q:'खुल्ने समय कति हो?',a:'२६ अक्टोबर २०२६ मा Google Maps को Observatory सूचीमा सातै दिन ०३:००–१७:०० देखिएको थियो। यो तेस्रो पक्षको विवरण हो; सवारी अनुमति, वास्तविक प्रवेश वा विशेष दिनको सञ्चालनको ग्यारेन्टी होइन। हालको आधिकारिक पहुँच तालिका हामीले पुष्टि गरेका छैनौँ।'},
+ {q:'टिकट, पार्किङ वा गाडीको शुल्क कति छ?',a:'हालको एकीकृत आधिकारिक दर पुष्टि भएको छैन। दृश्यस्थल, अब्जर्भेटरी, सवारी र पार्किङका लागि के समावेश छ भनेर छुट्टाछुट्टै सोध्नुहोस्; गाडीको भाडालाई प्रवेश शुल्क ठान्नु हुँदैन।'},
+ {q:'कञ्चनजङ्घा र सगरमाथा सधैँ देखिन्छन्?',a:'होइन। जिल्ला पर्यटन स्रोतले कञ्चनजङ्घामा पर्ने बिहानको प्रकाश र सफा अवस्थामा टाढाको सगरमाथाको दृश्य उल्लेख गर्छ। बादल, कुहिरो र क्षितिजले दृश्य छेक्न सक्छन्; सफा पूर्वानुमानले पनि दृश्य सुनिश्चित गर्दैन।'},
+ {q:'कति समय छुट्याउने?',a:'आउने–फर्कने सडक, अनुमति, प्रतीक्षा, आफ्नो हिँडाइ र रोजेको दृश्य समय अनुसार योजना बनाउनुहोस्। फर्कने निश्चित कार्यक्रम छ भने त्यही समयबाट उल्टो हिसाब गरी चालकसँग प्रस्थान र भेट्ने ठाउँ पक्का गर्नुहोस्; एउटै अवधि सबैका लागि पर्याप्त हुँदैन।'},
+ {q:'बच्चा, ज्येष्ठ नागरिक वा कम हिँड्न सक्ने व्यक्तिसँग के जाँच्ने?',a:'गाडी कहाँसम्म पुग्छ, त्यहाँबाट सतह र उकालो कस्तो छ, बस्ने ठाउँ र शौचालय उपलब्ध छन् कि छैनन् भनेर पहिले सोध्नुहोस्। हामीले हालको अवरोधरहित मार्ग पुष्टि गरेका छैनौँ। चिसो, अँध्यारो र लामो प्रतीक्षा आफ्नो समूहको आवश्यकतासँग मिलाउनुहोस्।'},
+ {q:'सूर्योदयपछि कहाँ जाने?',a:'Incredible India ले बतासिया लुप र घूम गुम्बालाई फर्कने यात्राका विकल्पमा उल्लेख गर्छ। यी अलग स्थान हुन्; आफ्नो समय, रोजेको गुम्बाको सही पहिचान, त्यसको खुल्ने समय र छुट्टै शुल्क जाँचेर एउटा उपयुक्त स्टप रोज्न सकिन्छ।'}
 ];
-
-const faqNode = {
-  '@type': 'FAQPage',
-  mainEntity: faqItems.map((item) => ({
-    '@type': 'Question',
-    name: item.q,
-    acceptedAnswer: { '@type': 'Answer', text: item.a }
-  }))
-};
-
-const graphLd = {
-  '@context': 'https://schema.org',
-  '@graph': [webSiteNode, organizationNode, webPageNode, attractionNode, breadcrumbNode, faqNode]
-};
-
-// --- Landmark cards (additive) ---------------------------------------------
-const landmarks = [
-  {
-    tag: 'रेलवे ल्यान्डमार्क',
-    name: 'बतासिया लुप',
-    desc: 'दार्जिलिङ हिमालयन रेलवेको गोलाकार ट्र्याक, गोर्खा युद्ध स्मारक र खुला हिमाली दृश्य। टाइगर हिल फर्कने बाटोमा लगभग ५ किमि दार्जिलिङबाट टाढा सहज स्टप।'
-  },
-  {
-    tag: 'बौद्ध गुम्बा',
-    name: 'घूम मठ (सम्टेन छोलिङ)',
-    desc: 'सम्टेन छोलिङ गुम्बा घूम (Ghoom) मा रहेको १८७५ को प्रसिद्ध बौद्ध गुम्बा हो। दार्जिलिङबाट करिब ८ किमि र टाइगर हिल जाने बाटोमा सजिलै जोडिन्छ।'
-  },
-  {
-    tag: 'वन्यजन्तु अभयारण्य',
-    name: 'सेन्चल वन्यजन्तु अभयारण्य',
-    desc: 'सेन्चल रेन्जमा फैलिएको वन्यजन्तु अभयारण्य; टाइगर हिल यही परिधिभित्र पर्छ। चरा, गोरालगायतका हिमाली जीवजन्तु र सेन्चल तालको लागि चिनिन्छ।'
-  },
-  {
-    tag: 'UNESCO सम्पदा',
-    name: 'दार्जिलिङ हिमालयन रेलवे',
-    desc: '१८८१ मा स्थापित विश्वप्रसिद्ध «टोय ट्रेन» रेलमार्ग; १९९९ देखि युनेस्को विश्व सम्पदा सूचीमा सूचीकृत। बतासिया लुप र घूम स्टेशन यसै रेलमार्गका भाग हुन्।'
-  },
-  {
-    tag: 'शान्ति स्तूप',
-    name: 'दार्जिलिङ शान्ति स्तूप (जापानीज टेम्पल)',
-    desc: '१९७२ मा स्थापित यो सेतो शान्ति स्तूप दार्जिलिङको प्रमुख दर्शनीय स्थल हो; टाइगर हिल भ्रमणसँगै जोड्न सकिने रमणीय दृश्य बिन्दु।'
-  }
-];
+const graph = {'@context':'https://schema.org','@graph':[
+ {'@type':'Organization','@id':SITE+'/#publisher',name:'Tiger Hill नेपाली यात्रा मार्गदर्शिका',url:SITE+'/',description:'स्वतन्त्र, गैरआधिकारिक, गैरनाफामूलक पर्यटन शैक्षिक सूचना मार्गदर्शिका'},
+ {'@type':'WebSite','@id':SITE+'/#website',url:SITE+'/',name:NAME,inLanguage:'ne',publisher:{'@id':SITE+'/#publisher'}},
+ {'@type':'WebPage','@id':SITE+'/#webpage',url:SITE+'/',name:title,description,inLanguage:'ne',dateModified:CHECKED,isPartOf:{'@id':SITE+'/#website'},about:{'@id':SITE+'/#attraction'},primaryImageOfPage:{'@type':'ImageObject',url:SITE+photos.dawn.src,width:2552,height:1775},publisher:{'@id':SITE+'/#publisher'}},
+ {'@type':'TouristAttraction','@id':SITE+'/#attraction',name:NAME,alternateName:['Tiger Hill, Darjeeling','टाइगर हिल सूर्योदय दृश्यस्थल'],description:'दार्जिलिङको सेन्चल क्षेत्रको हिमाली सूर्योदय दृश्यस्थल। दृश्य मौसममा निर्भर हुन्छ।',url:SITE+'/',image:SITE+photos.dawn.src,geo:{'@type':'GeoCoordinates',latitude:LAT,longitude:LNG},address:{'@type':'PostalAddress',streetAddress:'Senchal Rd, Senchal Forest',addressLocality:'Darjeeling',addressRegion:'West Bengal',postalCode:'734102',addressCountry:'IN'},hasMap:MAP,sameAs:[MAP,district,ministry]},
+ {'@type':'FAQPage',mainEntity:faqs.map(f=>({'@type':'Question',name:f.q,acceptedAnswer:{'@type':'Answer',text:f.a}}))}
+]};
 ---
 <!doctype html>
 <html lang="ne">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{pageTitle}</title>
-    <meta name="description" content={pageDescription} />
-    <meta name="theme-color" content="#10182d" />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href={pageUrl} />
-    <link rel="alternate" hreflang="ne" href={pageUrl} />
-    <link rel="alternate" hreflang="x-default" href={pageUrl} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
-    <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={pageDescription} />
-    <meta property="og:url" content={pageUrl} />
-    <meta property="og:site_name" content={ATTRACTION_FULL_NAME} />
-    <meta property="og:locale" content="ne_IN" />
-    <meta property="og:locale:alternate" content="en_IN" />
-    <meta property="og:locale:alternate" content="hi_IN" />
-    <meta property="og:image" content={heroImage} />
-    <meta property="og:image:secure_url" content={heroImage} />
-    <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:width" content="1600" />
-    <meta property="og:image:height" content="1067" />
-    <meta property="og:image:alt" content={`${ATTRACTION_FULL_NAME} - Dawn view of Kanchenjunga from ${CITY}, ${COUNTRY}`} />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={pageDescription} />
-    <meta name="twitter:image" content={heroImage} />
-    <meta name="twitter:image:alt" content={`${ATTRACTION_FULL_NAME} - Dawn view of Kanchenjunga from ${CITY}, ${COUNTRY}`} />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(graphLd)} />
-  </head>
-  <body>
-    <header class="hero" id="top">
-      <div class="hero-media" aria-hidden="true">
-        <img src={images.hero} alt="" width="1600" height="1067" fetchpriority="high" decoding="async" />
-      </div>
-      <div class="site-shell hero-grid">
-        <nav class="nav" aria-label="मुख्य नेभिगेसन">
-          <a href="#top" aria-label="टाइगर हिल मुख्य पृष्ठ"><img src="/logo.svg" alt="टाइगर हिल सनराइज" width="280" height="72" /></a>
-          <div class="nav-links">
-            <a href="#about">सूर्योदय</a>
-            <a href="#plan">योजना</a>
-            <a href="#location">यातायात</a>
-            <a href="#landmarks">वरिपरि</a>
-            <a href="#history">इतिहास</a>
-            <a href="#sources">स्रोत</a>
-          </div>
-        </nav>
-
-        <div class="hero-copy">
-          <p class="eyebrow hero-kicker">Senchal Forest · Darjeeling · West Bengal · India</p>
-          <h1 class="hero-title">{ATTRACTION_FULL_NAME}<br /><span class="hero-title-sub">({ATTRACTION_NP} — {CITY})</span></h1>
-          <p class="hero-lede">पहिलो उज्यालो हिमालमा पर्छ। टाइगर हिलमा सूर्योदय आफैंभन्दा पहिले कञ्चनजङ्घाका चुचुरा उज्यालिन्छन्। चिसो, कुहिरो र अँध्यारो पार गरेर आउने त्यो केही मिनेट नै यहाँको यात्रा हो।</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#plan">बिहानको योजना हेर्नुहोस् <span aria-hidden="true">→</span></a>
-            <a class="btn btn-ghost" href={MAPS_SHARE} target="_blank" rel="noopener noreferrer">Google Maps खोल्नुहोस्</a>
-          </div>
-        </div>
-
-        <div class="hero-strip" aria-label="छोटो जानकारी">
-          <div class="stat"><small>Google मूल्याङ्कन</small><strong>4.5 / 5 · 18,354 समीक्षा</strong></div>
-          <div class="stat"><small>उचाइ</small><strong>करिब 2,590 मिटर (8,482 फिट)</strong></div>
-          <div class="stat"><small>सूचीबद्ध समय</small><strong>03:00–17:00 · परिवर्तन सम्भव</strong></div>
-          <div class="stat"><small>स्थान</small><strong>सेन्चल फरेस्ट, दार्जिलिङ</strong></div>
-        </div>
-      </div>
-    </header>
-
-    <main>
-      <!-- ============ About (entity-bound first paragraph + breadcrumb) ============ -->
-      <section class="about" id="about">
-        <div class="site-shell about-grid">
-          <div class="about-lede">
-            <p class="eyebrow">Entity overview</p>
-            <h2 class="section-title">About {ATTRACTION_FULL_NAME} <span class="kicker-np-dark">({ATTRACTION_NP} · {CITY})</span></h2>
-            <p>
-              Welcome to <strong>{ATTRACTION_FULL_NAME}</strong>, widely recognized as the central sunrise viewpoint — <strong>{ATTRACTION_SHORT_NAME}</strong> — of the Eastern Himalayas. Located in the heart of <strong>Senchal Forest</strong> above <strong>{CITY}</strong>, <strong>{STATE}</strong>, <strong>{COUNTRY}</strong>, this destination serves as a primary hub for travellers visiting the region.
-            </p>
-            <p>
-              यो 2,590 मिटर उचाइको दृश्यस्थल कञ्चनजङ्घा (8,586 मि) को पहिलो प्रकाशको लागि विश्वप्रसिद्ध छ; सफा बिहानमा सगरमाथा, ल्होत्से र मकालुसम्म देखिन सक्छ।
-              When visiting <strong>{ATTRACTION_FULL_NAME}</strong>, visitors can easily explore surrounding historical landmarks and points of interest, including <strong>Batasia Loop</strong> and <strong>Ghoom Monastery (Samten Choling)</strong>.
-            </p>
-            <nav class="breadcrumb-trail" aria-label="Breadcrumb">
-              <a href="/">{ATTRACTION_FULL_NAME}</a>
-              <span class="sep" aria-hidden="true">→</span>
-              <a href="#location">{CITY}</a>
-              <span class="sep" aria-hidden="true">→</span>
-              <a href="#location">{STATE}</a>
-              <span class="sep" aria-hidden="true">→</span>
-              <span class="crumb-current">{COUNTRY}</span>
-            </nav>
-          </div>
-          <aside class="quick-facts" aria-label="Quick facts">
-            <h3>Quick facts</h3>
-            <dl>
-              <div class="row"><dt>Official name</dt><dd>{ATTRACTION_FULL_NAME}</dd></div>
-              <div class="row"><dt>Type</dt><dd>Himalayan sunrise viewpoint &amp; observatory</dd></div>
-              <div class="row"><dt>Elevation</dt><dd>2,590 m (8,482 ft)</dd></div>
-              <div class="row"><dt>City</dt><dd>{CITY}, {STATE}</dd></div>
-              <div class="row"><dt>Postal code</dt><dd>{POSTAL}, {COUNTRY}</dd></div>
-              <div class="row"><dt>Distance</dt><dd>~11 km from Darjeeling town</dd></div>
-              <div class="row"><dt>Coordinates</dt><dd>26.9948° N · 88.2827° E</dd></div>
-              <div class="row"><dt>Phone</dt><dd><a href={`tel:${PHONE.replace(/\s/g,'')}`}>{PHONE}</a></dd></div>
-            </dl>
-          </aside>
-        </div>
-      </section>
-
-      <!-- ============ Dawn band (existing content preserved) ============ -->
-      <section class="dawn-band" id="sunrise">
-        <div class="site-shell dawn-layout">
-          <div>
-            <p class="eyebrow" style="color:var(--dawn)">सूर्योदयको क्रम</p>
-            <h2 class="section-title">Sunrise Sequence at {ATTRACTION_SHORT_NAME} <span class="kicker-np">अँध्यारोबाट हिमालको सुनौलो धारसम्म</span></h2>
-            <p class="copy">{ATTRACTION_FULL_NAME} को अनुभव घडीभन्दा मौसमले तय गर्छ। सफा क्षितिज भएको बिहानमा कञ्चनजङ्घा सूर्योदयअघि नै गुलाबी–सुनौलो देखिन थाल्छ; धेरै सफा अवस्थामा टाढा सगरमाथा क्षेत्रसमेत देखिन सक्छ।</p>
-            <div class="timeline">
-              <div class="timeline-item"><time>03:00</time><div><strong>दार्जिलिङबाट प्रस्थान</strong><br /><span class="copy">उच्च सिजनमा भीडलाई समय दिनुहोस्।</span></div></div>
-              <div class="timeline-item"><time>04:00+</time><div><strong>दृश्यस्थलमा ठाउँ रोज्नुहोस्</strong><br /><span class="copy">अँध्यारो, चिसो र हावाका लागि तयार हुनुहोस्।</span></div></div>
-              <div class="timeline-item"><time>उषाकाल</time><div><strong>पहिलो प्रकाश कञ्चनजङ्घामा</strong><br /><span class="copy">सूर्य देखिनुअघि चुचुराहरू रंग बदल्न सक्छन्।</span></div></div>
-            </div>
-          </div>
-          <figure class="photo-card">
-            <img src={images.sunrise} alt={imageAlts.sunrise} width="1200" height="1600" loading="lazy" decoding="async" />
-            <figcaption class="photo-credit">Mouli Ghosh · CC BY-SA 4.0</figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <!-- ============ Plan (existing 6 cards preserved) ============ -->
-      <section class="info-section" id="plan">
-        <div class="site-shell">
-          <div class="info-head">
-            <div>
-              <p class="eyebrow">बिहानको व्यावहारिक योजना</p>
-              <h2 class="section-title">Planning Your {ATTRACTION_SHORT_NAME} Visit <span class="kicker-np-dark">पहिले तयारी, पछि दृश्य।</span></h2>
-            </div>
-            <p class="copy">यहाँको मुख्य चुनौती टिकटभन्दा चिसो, बादल र सूर्योदयअघिको ट्राफिक हो। समय, शुल्क र सवारी नियम बदलिन सक्छन्; त्यसैले तलको योजना स्थिर नियम होइन, यात्रा तयार पार्ने व्यावहारिक ढाँचा हो।</p>
-          </div>
-
-          <div class="cards">
-            <article class="card">
-              <div class="num">01</div>
-              <h3>उत्तम समय</h3>
-              <p><span class="highlight">अक्टोबर–नोभेम्बर र मार्च–मे</span> सफा दृश्यका लागि लोकप्रिय अवधि मानिन्छन्। तर कुनै मौसमले दृश्यको ग्यारेन्टी गर्दैन; अघिल्लो रात बादल र वर्षा पूर्वानुमान हेर्नुहोस्।</p>
-            </article>
-            <article class="card">
-              <div class="num">02</div>
-              <h3>सुझाइएको बसाइ</h3>
-              <p>दृश्यस्थलमा <span class="highlight">१.५–२ घण्टा</span> राख्नुहोस्। सूर्योदयपछि भीड घटेपछि दृश्य र फोटोका लागि केही अतिरिक्त समय उपयोगी हुन्छ।</p>
-            </article>
-            <article class="card">
-              <div class="num">03</div>
-              <h3>टिकट / शुल्क</h3>
-              <p>सवारी प्रवेश, कुपन, पार्किङ र अब्जर्भेटरी शुल्क <span class="highlight">परिवर्तनशील</span> हुन सक्छन्। अनलाइन पुराना दरलाई हालको आधिकारिक दर नमान्नुहोस्; चालक वा स्थानीय काउन्टरमा त्यही दिन पुष्टि गर्नुहोस्।</p>
-            </article>
-            <article class="card">
-              <div class="num">04</div>
-              <h3>के लगाउने</h3>
-              <p>बिहानको तापक्रम दार्जिलिङ शहरभन्दा बढी चिसो महसुस हुन सक्छ। तहदार ज्याकेट, टोपी, हातमोजा र ग्रिप भएको जुत्ता उपयोगी हुन्छ।</p>
-            </article>
-            <article class="card">
-              <div class="num">05</div>
-              <h3>पार्किङ</h3>
-              <p>शिखर नजिक पार्किङ <span class="highlight">सीमित र भीडभाडयुक्त</span> हुन सक्छ। जामका बेला गाडी तल रोकिएर केही दूरी उकालो हिँड्नुपर्ने सम्भावना राख्नुहोस्।</p>
-            </article>
-            <article class="card">
-              <div class="num">06</div>
-              <h3>दृश्य असफल भए?</h3>
-              <p>कुहिरोले हिमाल छोपे पनि दार्जिलिङ फर्कँदा घूम, बतासिया लुप वा सेन्चल क्षेत्र जोडेर बिहानको यात्रा उपयोगी बनाउन सकिन्छ।</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ History & Significance (new, verified) ============ -->
-      <section class="history" id="history">
-        <div class="site-shell">
-          <p class="eyebrow">इतिहास र महत्त्व</p>
-          <h2 class="section-title">History &amp; Significance of {ATTRACTION_FULL_NAME} <span class="kicker-np-dark">सेन्चल रेन्जमा सूर्योदयको इतिहास</span></h2>
-          <div class="history-grid">
-            <p>
-              <strong>{ATTRACTION_FULL_NAME}</strong> ({ATTRACTION_NP}) दार्जिलिङ शहरबाट करिब ११ किमि उत्तरमा <strong>सेन्चल रेन्ज</strong>मा अवस्थित, समुद्री सतहबाट <strong>2,590 मिटर (8,482 फिट)</strong> उचाइको एक प्रसिद्ध हिमाली दृश्यस्थल हो।
-              भारत सरकारको <em>Incredible India</em> र पश्चिम बङ्गाल सरकारको दार्जिलिङ जिल्ला पर्यटन स्रोतले यसलाई पूर्वी हिमालयको प्रमुख सूर्योदय बिन्दुका रूपमा वर्गीकृत गरेको छ।
-            </p>
-            <p>
-              यस दृश्यस्थलको विशेषता सूर्योदयभन्दा पहिले नै <strong>कञ्चनजङ्घा (8,586 मि)</strong> को शृङ्खलामाथि पहिलो प्रकाश पर्नु हो; असाध्यै सफा बिहानमा <strong>सगरमाथा, ल्होत्से, मकालु र जानु</strong> समेत देखिने गरेको छ।
-              अङ्ग्रेजी नाम <strong>Tiger Hill</strong> सेन्चल वनमा एक समय बस्ने रोयल बङ्गाल टाइगरसँग जोडिएको लोकव्याख्या छ।
-            </p>
-            <p>
-              <strong>{ATTRACTION_FULL_NAME}</strong> सेन्चल वन्यजन्तु अभयारण्यभित्र पर्छ, र यसको फर्कने बाटोमा <strong>दार्जिलिङ हिमालयन रेलवे (DHR)</strong> को <strong>बतासिया लुप</strong> र विश्वप्रसिद्ध <strong>घूम</strong> स्टेशन पर्छ। DHR लाई <strong>१९९९</strong> मा युनेस्को विश्व सम्पदा सूचीमा समावेश गरिएको हो।
-            </p>
-          </div>
-          <div class="history-tl">
-            <div class="tl"><b>Elevation</b><span>2,590 m / 8,482 ft</span><p>Incredible India / Darjeeling district tourism.</p></div>
-            <div class="tl"><b>Distance</b><span>~11 km from Darjeeling</span><p>On the Senchal Range above the town.</p></div>
-            <div class="tl"><b>UNESCO link</b><span>DHR · 1999</span><p>Darjeeling Himalayan Railway on the return route.</p></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ Route / Location (existing, entity-bound H2) ============ -->
-      <section class="route" id="location">
-        <div class="site-shell route-grid">
-          <div>
-            <p class="eyebrow">विस्तृत यातायात</p>
-            <h2 class="section-title">Location &amp; How to Visit {ATTRACTION_SHORT_NAME} in {CITY} <span class="kicker-np-dark">दार्जिलिङबाट रातमै यात्रा सुरु हुन्छ।</span></h2>
-            <p class="copy">{ATTRACTION_FULL_NAME} {CITY} शहरबाट करिब ११ किमि टाढा छ। सूर्योदय यात्राका लागि स्थानीय रिजर्भ ट्याक्सी वा साझा गाडी सामान्य विकल्प हुन्।</p>
-            <div class="notice"><strong>महत्त्वपूर्ण:</strong> सूर्योदय समयमा सवारी कुपन, संख्या सीमा वा प्रवेश कट-अफ लागू हुन सक्छ। नियम समयअनुसार फेरिन सक्छ; अघिल्लो साँझ होटल/चालकसँग हालको व्यवस्था पुष्टि गर्नुहोस्।</div>
-          </div>
-          <div class="route-list">
-            <div class="route-row"><strong>दार्जिलिङ</strong><div><b>स्थानीय ट्याक्सी / साझा गाडी</b><br /><span class="copy">सामान्यतया सबेरै प्रस्थान। ट्राफिक र जाँचका लागि अतिरिक्त समय राख्नुहोस्।</span></div></div>
-            <div class="route-row"><strong>NJP</strong><div><b>न्यु जलपाइगुडी रेलवे स्टेशन</b><br /><span class="copy">पहिले दार्जिलिङ पुगेर बस्नु सबैभन्दा सहज; जिल्ला पर्यटन स्रोतले दार्जिलिङसम्म करिब ८८ किमि बताउँछ।</span></div></div>
-            <div class="route-row"><strong>IXB</strong><div><b>बागडोगरा विमानस्थल</b><br /><span class="copy">दार्जिलिङतर्फ सडकमार्ग; जिल्ला स्रोतमा दूरी करिब ९० किमि उल्लेख छ।</span></div></div>
-            <div class="route-row"><strong>फर्कँदा</strong><div><b>घूम → बतासिया लुप</b><br /><span class="copy">सूर्योदयपछि फर्कने बाटोमा सहजै जोड्न सकिने लोकप्रिय क्रम।</span></div></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ Split photo (existing) ============ -->
-      <section class="split-photo">
-        <img src={images.range} alt={imageAlts.range} width="1600" height="1067" loading="lazy" decoding="async" />
-        <div class="split-copy">
-          <p class="eyebrow">दृश्य पढ्ने तरिका</p>
-          <h2 class="section-title">How to Read the Sunrise at {ATTRACTION_SHORT_NAME} <span class="kicker-np">सूर्यतिर होइन, पहिले हिमालतिर हेर्नुहोस्।</span></h2>
-          <p class="copy">{ATTRACTION_FULL_NAME} को विशेषता यही हो: क्षितिजबाट सूर्य निस्किनुअघि कञ्चनजङ्घाको बरफले प्रकाश समात्छ। राम्रो दृश्यको दिन फोटो खिच्ने क्रम पनि उल्टो राख्नुहोस्—पहिले हिमशृङ्खला, त्यसपछि सूर्योदय।</p>
-        </div>
-      </section>
-
-      <!-- ============ Landmarks & Attractions Around (existing 3 + 2 new) ============ -->
-      <section class="nearby" id="landmarks">
-        <div class="site-shell">
-          <p class="eyebrow">वरिपरिका स्थान</p>
-          <h2 class="section-title">Landmarks &amp; Attractions Around {ATTRACTION_SHORT_NAME} <span class="kicker-np-dark">सूर्योदयपछि बिहान अझै बाँकी हुन्छ।</span></h2>
-          <div class="nearby-grid">
-            <article class="nearby-card"><span>रेलवे ल्यान्डमार्क</span><h3>बतासिया लुप</h3><p>दार्जिलिङ हिमालयन रेलवेको गोलाकार ट्र्याक, युद्ध स्मारक र खुला हिमाली दृश्य। फर्कने बाटोमा सहज स्टप।</p></article>
-            {landmarks.map((l) => (
-              <article class="nearby-card"><span>{l.tag}</span><h3>{l.name}</h3><p>{l.desc}</p></article>
-            ))}
-          </div>
-
-          <div class="info-head" style="margin-top:90px;margin-bottom:34px">
-            <div><p class="eyebrow">वरिपरि खानपान</p><h2 class="section-title">चिसो बिहानपछि<br />तातो स्वाद।</h2></div>
-            <p class="copy">सूर्योदय यात्रापछि घूम–बतासिया क्षेत्रमा तातो चिया, मोमो, थुक्पा, चाउमिन र सानो नास्ता सजिलो विकल्प हुन्। बतासिया आसपासको स्थानीय बजारमा सिङ्गारा/समोसा जस्ता नास्ता पनि पाइन्छ। खुल्ने समय बिहानअनुसार फरक हुन सक्छ।</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ Gallery (existing) ============ -->
-      <section class="gallery" aria-labelledby="gallery-title">
-        <div class="site-shell">
-          <p class="eyebrow">वास्तविक दृश्य</p>
-          <h2 class="section-title" id="gallery-title" style="margin-bottom:38px">Real Views from {ATTRACTION_FULL_NAME} <span class="kicker-np-dark" style="display:block;font-size:1rem;color:var(--muted);margin-top:6px;">कुहिरो खुल्यो भने दृश्यको स्केल बदलिन्छ।</span></h2>
-          <div class="gallery-grid">
-            <figure><img src={images.viewpoint} alt={imageAlts.viewpoint} width="1600" height="1067" loading="lazy" decoding="async" /><figcaption class="photo-credit">Aditya thaokar · CC BY-SA 3.0</figcaption></figure>
-            <figure><img src={images.hero} alt={imageAlts.hero} width="1600" height="1067" loading="lazy" decoding="async" /><figcaption class="photo-credit">Jejsiguoa · CC BY-SA 4.0</figcaption></figure>
-            <figure><img src={images.range} alt={imageAlts.range} width="1600" height="1067" loading="lazy" decoding="async" /><figcaption class="photo-credit">Jejsiguoa · CC BY-SA 4.0</figcaption></figure>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ Map (existing) + authoritative outbound links ============ -->
-      <section class="map-section" id="map">
-        <div class="site-shell">
-          <p class="eyebrow">स्थान</p>
-          <h2 class="section-title" style="margin-bottom:34px">Find {ATTRACTION_FULL_NAME} on the Map <span class="kicker-np-dark" style="display:block;font-size:1rem;color:var(--muted);margin-top:6px;">Senchal Rd, Senchal Forest, {CITY}</span></h2>
-          <div class="map-wrap">
-            <iframe
-              src={MAPS_EMBED}
-              title={`${ATTRACTION_FULL_NAME} Google Map`}
-              loading="lazy"
-              referrerpolicy="strict-origin-when-cross-origin"
-              allowfullscreen></iframe>
-          </div>
-          <p class="copy" style="margin-top:16px">
-            <b>Address:</b> Senchal Rd, Senchal Forest, {CITY}, {STATE} {POSTAL}, {COUNTRY} · <b>Phone:</b> <a href={`tel:${PHONE.replace(/\s/g,'')}`}>{PHONE}</a> · <b>Coordinates:</b> 26.9948° N, 88.2827° E
-          </p>
-          <div class="map-authority">
-            <span><span class="gov">OFFICIAL</span><a href="https://darjeeling.gov.in/tourist-place/tiger-hill/" target="_blank" rel="noopener noreferrer">Darjeeling district tourism — Tiger Hill</a></span>
-            <span><span class="gov">.GOV.IN</span><a href="https://www.incredibleindia.gov.in/en/west-bengal/darjeeling/tiger-hill" target="_blank" rel="noopener noreferrer">Incredible India — West Bengal / Darjeeling</a></span>
-            <span><span class="gov">.GOV.IN</span><a href="https://www.wbtourism.gov.in/" target="_blank" rel="noopener noreferrer">West Bengal Tourism portal</a></span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ FAQ (8 questions) ============ -->
-      <section class="faq" id="faq">
-        <div class="site-shell faq-layout">
-          <div>
-            <p class="eyebrow" style="color:var(--dawn)">FAQ</p>
-            <h2 class="section-title">जानेअघि<br />जान्नुपर्ने कुरा</h2>
-            <p class="copy">{ATTRACTION_FULL_NAME} को अनुभव मौसम र स्थानीय यातायात व्यवस्थामा धेरै निर्भर हुन्छ। परिवर्तनशील जानकारीलाई प्रस्थानअघि फेरि पक्का गर्नुहोस्।</p>
-          </div>
-          <div>
-            {faqItems.map((item, index) => (
-              <details open={index === 0}>
-                <summary>{item.q}</summary>
-                <p>{item.a}</p>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ Sources & Further Reading (E-E-A-T) ============ -->
-      <section class="sources" id="sources">
-        <div class="site-shell sources-list">
-          <div>
-            <p class="eyebrow">E-E-A-T · References</p>
-            <h2 class="section-title">Sources &amp; Further Reading</h2>
-            <p class="copy">{ATTRACTION_FULL_NAME} बारेको जानकारी सत्यापित सरकारी र आधिकारिक स्रोतबाट लिइएको हो। सूर्योदय समय, सवारी कुपन र पार्किङ शुल्क परिवर्तनशील भएकाले अन्तिम पुष्टि स्थानीय काउन्टर वा तलका सरकारी स्रोतमा गर्नुहोस्।</p>
-            <p class="sources-meta"><b>Last updated:</b> {LAST_UPDATED} · <b>Entity:</b> {ATTRACTION_FULL_NAME} · <b>Domain:</b> <a href={SITE} style="color:var(--dawn-soft)">{SITE.replace('https://','')}</a></p>
-          </div>
-          <ul>
-            <li><b>Darjeeling district (Govt. of West Bengal)</b><a href="https://darjeeling.gov.in/tourist-place/tiger-hill/" target="_blank" rel="noopener noreferrer">darjeeling.gov.in/tourist-place/tiger-hill</a><span>Local district tourism page for {ATTRACTION_SHORT_NAME}.</span></li>
-            <li><b>Incredible India (Ministry of Tourism)</b><a href="https://www.incredibleindia.gov.in/en/west-bengal/darjeeling/tiger-hill" target="_blank" rel="noopener noreferrer">incredibleindia.gov.in/.../tiger-hill</a><span>National tourism authority entry (elevation, dawn view).</span></li>
-            <li><b>West Bengal Tourism (Govt. of West Bengal)</b><a href="https://www.wbtourism.gov.in/" target="_blank" rel="noopener noreferrer">wbtourism.gov.in</a><span>State-level official tourism portal.</span></li>
-            <li><b>Darjeeling Himalayan Railway — UNESCO</b><a href="https://whc.unesco.org/en/list/944/" target="_blank" rel="noopener noreferrer">whc.unesco.org/en/list/944</a><span>UNESCO World Heritage listing (1999) — link from the return route via Batasia Loop &amp; Ghoom.</span></li>
-            <li><b>Wikipedia — Tiger Hill, Darjeeling</b><a href="https://en.wikipedia.org/wiki/Tiger_Hill,_Darjeeling" target="_blank" rel="noopener noreferrer">en.wikipedia.org/wiki/Tiger_Hill,_Darjeeling</a><span>Encyclopedic reference (elevation, geography).</span></li>
-            <li><b>Google Maps listing</b><a href={MAPS_SHARE} target="_blank" rel="noopener noreferrer">{MAPS_SHARE}</a><span>Canonical Google Maps share URL for {ATTRACTION_FULL_NAME}.</span></li>
-          </ul>
-        </div>
-        <p class="photo-credit-line site-shell" style="margin-top:34px">All photographs remain the property of their original photographers: Kanchenjunga from Tiger Hill at dawn · Jejsiguoa · CC BY-SA 4.0 · Sunrise at Tigerhill, Darjeeling · Mouli Ghosh · CC BY-SA 4.0 · Tiger Hill sunrise point · Aditya thaokar · CC BY-SA 3.0 · Kanchenjunga range from Tiger Hill · Jejsiguoa · CC BY-SA 4.0. Each photograph is used under the Creative Commons licence shown above.</p>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <div class="site-shell">
-        <div class="footer-grid">
-          <div>
-            <img src="/logo.svg" alt={ATTRACTION_FULL_NAME} width="280" height="72" loading="lazy" />
-            <p><b>{ATTRACTION_FULL_NAME}</b> — {ATTRACTION_NP}।</p>
-            <p class="nap-line"><b>{ATTRACTION_FULL_NAME}</b> · Senchal Rd, Senchal Forest, {CITY}, {STATE} {POSTAL}, {COUNTRY} · <a href={`tel:${PHONE.replace(/\s/g,'')}`}>{PHONE}</a></p>
-          </div>
-          <div>
-            <p><a href="https://darjeeling.gov.in/tourist-place/tiger-hill/" target="_blank" rel="noopener noreferrer">दार्जिलिङ जिल्ला पर्यटन स्रोत</a> · <a href="https://www.wbtourism.gov.in/" target="_blank" rel="noopener noreferrer">West Bengal Tourism</a> · <a href={MAPS_SHARE} target="_blank" rel="noopener noreferrer">Google Maps</a></p>
-            <p><button type="button" id="cookie-settings">कुकी सेटिङ</button> · गोपनीयता: आवश्यक स्थानीय स्टोरेज बाहेक Analytics तपाईंको सहमतिपछि मात्र लोड हुन्छ।</p>
-          </div>
-        </div>
-        <p class="disclaimer">यो वेबसाइट अनौपचारिक यात्रा मार्गदर्शिका हो र {ATTRACTION_FULL_NAME}, सेन्चल वन्यजन्तु अभयारण्य, दार्जिलिङ जिल्ला प्रशासन वा Google सँग आधिकारिक रूपमा सम्बद्ध छैन। समय, शुल्क, पहुँच, सवारी नियम र मौसमसम्बन्धी जानकारी प्रस्थानअघि स्थानीय स्रोतसँग पुष्टि गर्नुहोस्।</p>
-      </div>
-    </footer>
-
-    <div class="cookie-panel" id="cookie-panel" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-copy" hidden>
-      <h2 id="cookie-title">Analytics कुकी अनुमति</h2>
-      <p id="cookie-copy">तपाईंले अनुमति दिएपछि मात्र Google Analytics 4 (G-HXM22WWPKP) लोड हुन्छ। अस्वीकार गरेमा साइटका मुख्य सामग्री र नक्सा प्रयोगमा असर पर्दैन।</p>
-      <div class="cookie-actions">
-        <button class="cookie-accept" type="button" data-consent="yes">अनुमति दिनुहोस्</button>
-        <button class="cookie-reject" type="button" data-consent="no">अस्वीकार गर्नुहोस्</button>
-      </div>
-    </div>
-
-    <script is:inline>
-      (() => {
-        const storageKey = 'tiger-hill-ga-consent';
-        const panel = document.getElementById('cookie-panel');
-        const settings = document.getElementById('cookie-settings');
-        let gaLoaded = false;
-
-        const loadGA = () => {
-          if (gaLoaded) return;
-          gaLoaded = true;
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){ window.dataLayer.push(arguments); }
-          window.gtag = gtag;
-          gtag('js', new Date());
-          gtag('config', 'G-HXM22WWPKP', { anonymize_ip: true });
-          const script = document.createElement('script');
-          script.async = true;
-          script.src = 'https://www.googletagmanager.com/gtag/js?id=G-HXM22WWPKP';
-          document.head.appendChild(script);
-        };
-
-        const saved = localStorage.getItem(storageKey);
-        if (saved === 'yes') loadGA();
-        if (!saved && panel) panel.hidden = false;
-
-        panel?.querySelectorAll('[data-consent]').forEach((button) => {
-          button.addEventListener('click', () => {
-            const value = button.getAttribute('data-consent');
-            if (!value) return;
-            localStorage.setItem(storageKey, value);
-            if (value === 'yes') loadGA();
-            panel.hidden = true;
-          });
-        });
-
-        settings?.addEventListener('click', () => {
-          if (panel) panel.hidden = false;
-        });
-      })();
-
-      // Service worker registration (PWA). Skip in dev / file:// to avoid noise.
-      if ('serviceWorker' in navigator) {
-        const isLocalhost = ['localhost', '127.0.0.1'].includes(location.hostname);
-        if (!isLocalhost) {
-          window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').catch(() => { /* silent */ });
-          });
-        }
-      }
-    </script>
-  </body>
-</html>
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>{title}</title><meta name="description" content={description}/><meta name="robots" content="index,follow"/><meta name="theme-color" content="#10182d"/>
+<link rel="canonical" href={SITE+'/'}/><link rel="alternate" hreflang="ne" href={SITE+'/'}/><link rel="alternate" hreflang="x-default" href={SITE+'/'}/>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"/><link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png"/><link rel="apple-touch-icon" href="/apple-touch-icon.png"/><link rel="manifest" href="/site.webmanifest"/>
+<meta property="og:type" content="website"/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:url" content={SITE+'/'}/><meta property="og:locale" content="ne_IN"/><meta property="og:image" content={SITE+photos.dawn.src}/><meta property="og:image:width" content="2552"/><meta property="og:image:height" content="1775"/><meta property="og:image:alt" content={photos.dawn.alt}/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content={title}/><meta name="twitter:description" content={description}/><meta name="twitter:image" content={SITE+photos.dawn.src}/><meta name="twitter:image:alt" content={photos.dawn.alt}/>
+<script is:inline type="application/ld+json" set:html={JSON.stringify(graph)}/>
+<script is:inline src="/analytics.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#about">मुख्य सामग्रीमा जानुहोस्</a>
+<header class="hero" id="top">
+ <div class="hero-media" aria-hidden="true"><img src={photos.dawn.src} alt="" width={photos.dawn.width} height={photos.dawn.height} fetchpriority="high" decoding="async"/></div>
+ <div class="site-shell hero-grid">
+  <nav class="nav" aria-label="मुख्य नेभिगेसन"><a href="/" aria-label="टाइगर हिल मुख्य पृष्ठ"><img src="/logo.svg" alt="Tiger Hill sunrise" width="280" height="72"/></a><div class="nav-links"><a href="#about">परिचय</a><a href="#plan">योजना</a><a href="#location">यातायात</a><a href="#gallery-title">फोटो</a><a href="#sources">स्रोत</a></div></nav>
+  <div class="hero-copy"><p class="eyebrow hero-kicker">सेन्चल · दार्जिलिङ · पश्चिम बङ्गाल</p><h1 class="hero-title">टाइगर हिल सूर्योदय<span class="hero-title-sub">Tiger Hill Observatory / Sunrise Viewpoint</span></h1><p class="hero-lede">बिहानको प्रकाशमा कञ्चनजङ्घा हेर्ने यात्रा। आकाश खुलेको दिन हिमशृङ्खला उज्यालिन्छ; बादल लागेको दिन अनुभव फरक हुन्छ। यहाँ स्थान, सूर्योदयको तयारी र पहुँचबारे सोध्नुपर्ने कुरा छुट्याएर पढ्नुहोस्।</p><div class="hero-actions"><a class="btn btn-primary" href="#plan">भ्रमणको योजना →</a><a class="btn btn-ghost" href={MAP} target="_blank" rel="noopener noreferrer">नक्सा खोल्नुहोस्</a></div></div>
+  <div class="hero-strip"><div class="stat"><b>दार्जिलिङ</b><span>सेन्चल क्षेत्र</span></div><div class="stat"><b>बिहानको दृश्य</b><span>मौसममा निर्भर</span></div><div class="stat"><b>पहुँच</b><span>प्रस्थानअघि पुष्टि</span></div><div class="stat"><b>नेपाली गाइड</b><span>स्वतन्त्र सूचना</span></div></div>
+ </div>
+</header>
+<main>
+<section class="about" id="about"><div class="site-shell about-grid"><div class="about-lede"><p class="eyebrow">कुन टाइगर हिल?</p><h2 class="section-title">दार्जिलिङको हिमाली दृश्यस्थल</h2><p>टाइगर हिल कञ्चनजङ्घामा पर्ने बिहानको प्रकाश हेर्न चिनिएको स्थान हो। <a href={district}>दार्जिलिङ जिल्ला पर्यटनको परिचय</a>ले यहाँबाट देखिने हिमाली दृश्य र नजिकको सेन्चल वन्यजन्तु अभयारण्य उल्लेख गर्छ। यो शहरको यातायात केन्द्र वा दार्जिलिङको अलग Observatory Hill होइन।</p><p><a href={ministry}>भारतको पर्यटन मन्त्रालयको Incredible India</a> ले उचाइ करिब २,५९० मिटर बताउँछ। हिमाल देखिनु क्षितिज, बादल र कुहिरोमा निर्भर हुन्छ। सूर्योदयको सही समय र त्यस बेला सडक वा दृश्यस्थलमा प्रवेश पाउने व्यवस्था दुई अलग कुरा हुन्।</p><p>यहाँका फोटो २०११, २०१६ र २०२१ का ऐतिहासिक दृश्य हुन्। तिनले आजको निर्माण, भीड वा मौसम प्रमाणित गर्दैनन्।</p></div><aside class="quick-facts" aria-label="स्थानको संक्षिप्त जानकारी"><h3>नक्सा र सूचीकृत विवरण</h3><dl><div class="row"><dt>स्थान</dt><dd>Senchal Rd, Senchal Forest, West Bengal 734102</dd></div><div class="row"><dt>नक्साको बिन्दु</dt><dd><bdi dir="ltr">{LAT}, {LNG}</bdi></dd></div><div class="row"><dt>Plus Code</dt><dd>X7VP+W3</dd></div><div class="row"><dt>Google Maps</dt><dd><bdi dir="ltr">4.5 / 5 · 18,431</bdi> मूल्याङ्कन</dd></div><div class="row"><dt>सूचीकृत समय</dt><dd>सातै दिन <bdi dir="ltr">03:00–17:00</bdi></dd></div></dl><p class="copy">Maps विवरण २६ अक्टोबर २०२६ मा हेरिएको तेस्रो पक्षको सूची हो। यसले अनुमति, सवारी नियम वा खुला प्रवेश सुनिश्चित गर्दैन। सूचीमा फोन वा वेबसाइट देखिएन।</p></aside></div></section>
+<section class="dawn-band" id="sunrise"><div class="site-shell dawn-layout"><div><p class="eyebrow">दुई दिशाको उज्यालो</p><h2 class="section-title">सूर्योदय र हिमालको पहिलो प्रकाश</h2><p class="copy">सूर्य उदाउने क्षितिज र कञ्चनजङ्घाको शृङ्खला एउटै फोटोको विषय नहुन सक्छन्। सफा बिहानमा चुचुराहरूमा रंग बदलिँदा पहाडतिर पनि हेर्नुहोस्। यहाँको सूर्यको फोटो लेखकले कञ्चनजङ्घाको विपरीत दिशाबाट खिचेको बताएका छन्।</p><div class="timeline"><div class="timeline-item"><time>अघिल्लो दिन</time><div><strong>मिति र बाटो मिलाउनुहोस्</strong><p class="copy">सूर्योदयको समय, हालको पहुँच र चालकको भेट्ने ठाउँ हेर्नुहोस्।</p></div></div><div class="timeline-item"><time>बाटोमा</time><div><strong>फर्कने योजना राख्नुहोस्</strong><p class="copy">भीड वा मौसमले योजना बदलिएमा कहाँ भेट्ने र कहिले फर्कने भन्ने तय गर्नुहोस्।</p></div></div><div class="timeline-item"><time>उषाकाल</time><div><strong>क्षितिज र शृङ्खला हेर्नुहोस्</strong><p class="copy">दृश्य खुल्दा फोटो लिनुहोस्; बादल खुलेरै छाड्छ भन्ने अपेक्षा नराख्नुहोस्।</p></div></div></div></div><figure class="photo-card"><img src={photos.sunrise.src} alt={photos.sunrise.alt} width={photos.sunrise.width} height={photos.sunrise.height} loading="lazy" decoding="async"/><figcaption class="photo-credit"><a href={photos.sunrise.source}>Mouli Ghosh · २०१६</a> · <a href={photos.sunrise.licenseURL}>CC BY-SA 4.0</a></figcaption></figure></div></section>
+<section class="info-section" id="plan"><div class="site-shell"><div class="info-head"><div><p class="eyebrow">यात्राको तयारी</p><h2 class="section-title">निस्कनुअघि छ वटा निर्णय</h2></div><p class="copy">सूचीकृत समयलाई बुकिङ वा प्रवेश स्वीकृति नठान्नुहोस्। आफ्नो मिति, समूह र फर्कने कार्यक्रम मिलाएर बिहानको यात्रा छान्नुहोस्।</p></div><div class="cards">
+<article class="card"><div class="num">01</div><h3>मौसम र दृश्य</h3><p>मिति नजिकको आधिकारिक पूर्वानुमानमा बादल, वर्षा र हावा हेर्नुहोस्। सफा आकाशको सम्भावना र दृश्य देखिने ग्यारेन्टी फरक हुन्; कुहिरो नहटे फर्कने विकल्प राख्नुहोस्।</p></article>
+<article class="card"><div class="num">02</div><h3>बस्ने समय</h3><p>प्रतीक्षा गर्न सक्ने समय, चिसो सहन सक्ने क्षमता र फर्कने यातायातबाट अवधि तय गर्नुहोस्। निश्चित रेल वा उडान छ भने जोडिने समयसँग पर्याप्त अन्तर राख्ने योजना चालकसँग बनाउनुहोस्।</p></article>
+<article class="card"><div class="num">03</div><h3>टिकटमा के समावेश छ?</h3><p>हामीले हालको आधिकारिक शुल्कतालिका पुष्टि गरेका छैनौँ। सवारी भाडा, प्रवेश, अब्जर्भेटरी र पार्किङमध्ये कुन रकम कुन सेवाको हो भनेर तिर्नुअघि बुझ्नुहोस्। निःशुल्क प्रवेशको दाबी यहाँ गरिएको छैन।</p></article>
+<article class="card"><div class="num">04</div><h3>कपडा र साथमा सामान</h3><p>तहदार तातो कपडा, पानी, टर्च र पकड भएको जुत्ता उपयोगी तयारी हुन्। आफ्नो औषधि साथमा राख्नुहोस्; अँध्यारोमा अनिश्चित किनार वा बन्द क्षेत्रमा नजानुहोस्।</p></article>
+<article class="card"><div class="num">05</div><h3>हिँडाइ र पार्किङ</h3><p>हालको पार्किङ क्षमता वा अवरोधरहित मार्ग हामीले पुष्टि गरेका छैनौँ। गाडी रोक्ने ठाउँदेखि अन्तिम हिँडाइ, भर्‍याङ र फर्कने पिकअपबारे आफ्नो समूहको आवश्यकताअनुसार सोध्नुहोस्।</p></article>
+<article class="card"><div class="num">06</div><h3>फोटो र प्रतीक्षा</h3><p>अरूको दृश्य नछेक्ने स्थान रोज्नुहोस् र स्थानीय फोटो/ट्राइपड निर्देशन मान्नुहोस्। हिमाल नदेखिए पनि त्यही दिन देखिएको आकाश र वनको दृश्यलाई त्यसै रूपमा सम्झन सकिन्छ।</p></article>
+</div></div></section>
+<section class="history" id="history"><div class="site-shell"><p class="eyebrow">प्राकृतिक र सांस्कृतिक सन्दर्भ</p><h2 class="section-title">दृश्यस्थल किन चिनिन्छ?</h2><div class="history-grid"><p>जिल्ला पर्यटनको टाइगर हिल परिचयले कञ्चनजङ्घामा पर्ने बिहानको रंगलाई यसको आकर्षणका रूपमा वर्णन गर्छ। सफा अवस्थामा टाढाको सगरमाथा देखिने उल्लेख पनि छ। यी दृश्यको परिचय हुन्, प्रत्येक भ्रमणमा देखिने वस्तुको सूची होइनन्।</p><p>Incredible India ले टाइगर हिललाई दार्जिलिङको सूर्योदय यात्रासँग जोड्छ र फर्कँदा बतासिया लुप तथा घूम गुम्बा हेर्ने विकल्प बताउँछ। वरिपरिका स्थलको इतिहास र सञ्चालन अलग छन्; एउटै मार्गमा नाम आएको भरमा सबै खुला वा एउटै टिकटमा पर्छन् भन्ने अर्थ हुँदैन।</p><p>दार्जिलिङ जिल्ला पृष्ठको देखिने अद्यावधिक मिति ३० सेप्टेम्बर २०२० हो। त्यसलाई भौगोलिक र दृश्यको परिचयका लागि प्रयोग गरिएको छ; आजको शुल्क वा सवारी आदेशका लागि होइन। नामको उत्पत्तिसम्बन्धी अपुष्ट कथा र निर्माणको अनुमानित मिति यहाँ तथ्यका रूपमा राखिएको छैन।</p></div><div class="history-tl"><div class="tl"><b>उचाइको परिचय</b><span>करिब २,५९० मिटर</span><p>Incredible India को विवरण।</p></div><div class="tl"><b>मुख्य अनुभव</b><span>हिमालमा बिहानको प्रकाश</span><p>मौसम र क्षितिजमा निर्भर दृश्य।</p></div><div class="tl"><b>अलग स्थल</b><span>Observatory Hill होइन</span><p>नक्सामा नाम र स्थान दुवै मिलाउनुहोस्।</p></div></div></div></section>
+<section class="route" id="location"><div class="site-shell route-grid"><div><p class="eyebrow">त्यहाँ कसरी पुग्ने?</p><h2 class="section-title">दार्जिलिङबाट सेन्चलतर्फ</h2><p class="copy">नक्सामा Tiger Hill Observatory / Sunrise Viewpoint र Senchal Rd छान्नुहोस्। आफ्नो बसाइबाटको वास्तविक सडकमार्ग, रातको पिकअप र फर्कने ठाउँ चालकसँग मिलाउनुहोस्। नक्सामा देखिएको यात्रा समयलाई निश्चित प्रस्थान वा आगमन समय नमान्नुहोस्।</p><div class="notice"><strong>पहुँच र अनुमति:</strong> हालको सडक प्रवेश, निजी गाडी, कुपन वा अन्तिम प्रवेशको नियम यस गाइडले पुष्टि गरेको छैन। स्थानीय प्रशासनको सूचना र यात्रा मितिको व्यवस्थासँग योजना मिलाउनुहोस्।</div></div><div class="route-list"><div class="route-row"><strong>दार्जिलिङ</strong><div><b>भेट्ने ठाउँ र गाडी</b><p class="copy">तपाईंको ठेगानाबाट पिकअप, भाडामा समावेश सेवा र फर्कने भेट स्पष्ट पार्नुहोस्। साझा सेवा उपलब्ध छ भनेर पहिले नै नमान्नुहोस्।</p></div></div><div class="route-row"><strong>NJP / IXB</strong><div><b>पहाडी यात्राको छुट्टै भाग</b><p class="copy">रेल वा विमानबाट दार्जिलिङ पुग्ने यात्रा र टाइगर हिलको बिहानको यात्रा अलग हिसाबले मिलाउनुहोस्। जिल्ला पर्यटन पृष्ठको दूरी दार्जिलिङसम्मको हो, दृश्यस्थलको अन्तिम प्रवेशसम्मको होइन।</p></div></div><div class="route-row"><strong>फर्कँदा</strong><div><b>एउटा थप स्टप</b><p class="copy">बतासिया वा घूममध्ये रुचि र खुल्ने समयअनुसार एउटा छान्दा हतार कम हुन्छ। अर्को स्थान थप्नुअघि आफ्नो ऊर्जा र फर्कने समय हेर्नुहोस्।</p></div></div></div></div></section>
+<section class="split-photo"><img src={photos.range.src} alt={photos.range.alt} width={photos.range.width} height={photos.range.height} loading="lazy" decoding="async"/><div class="split-copy"><p class="eyebrow">ऐतिहासिक हिमाली दृश्य</p><h2 class="section-title">क्षितिज खुल्दा देखिने विस्तार</h2><p class="copy">यो २०२१ को कञ्चनजङ्घा शृङ्खलाको फोटो हो। पुरानो फोटोले दृश्यस्थलको प्राकृतिक सन्दर्भ देखाउँछ; तपाईंको यात्राको बिहान कस्तो हुन्छ भन्ने पूर्वानुमान गर्दैन।</p><p><a href={photos.range.source}>Jejsiguoa · मूल फोटो र विवरण</a> · <a href={photos.range.licenseURL}>CC BY-SA 4.0</a></p></div></section>
+<section class="nearby" id="landmarks"><div class="site-shell"><p class="eyebrow">अलग भ्रमणका विकल्प</p><h2 class="section-title">फर्कने यात्रासँग के जोड्ने?</h2><div class="nearby-grid"><article class="nearby-card"><span>रेलवे सन्दर्भ</span><h3>बतासिया लुप</h3><p>Incredible India ले फर्कने यात्रामा उल्लेख गरेको रेलवे स्थल। त्यहाँको वर्तमान प्रवेश र भ्रमण समय अलग जाँच्नुहोस्; टाइगर हिलको सूची त्यसमा लागू हुँदैन।</p></article><article class="nearby-card"><span>गुम्बाको भ्रमण</span><h3>घूम क्षेत्र</h3><p>पर्यटन मन्त्रालयले Ghum Monastery को विकल्प दिन्छ। घूममा गुम्बाको नाम र ठेगाना मिलाउनुहोस्; Samten Choling र अन्य गुम्बाको नामलाई एउटै इतिहास वा प्रवेश व्यवस्थामा नमिसाउनुहोस्।</p></article><article class="nearby-card"><span>वन क्षेत्र</span><h3>सेन्चल</h3><p>जिल्ला पर्यटनले सेन्चल वन्यजन्तु अभयारण्य नजिक रहेको बताउँछ। वन क्षेत्रको छुट्टै पहुँच र स्थानीय निर्देशन बुझेर मात्र अर्को बाटो वा स्टप रोज्नुहोस्।</p></article></div><div class="info-head" style="margin-top:60px"><div><p class="eyebrow">खानपानको योजना</p><h2 class="section-title">पानी र नास्ता पहिले सोच्नुहोस्</h2></div><p class="copy">हामीले सबेरै खुल्ने कुनै पसल वा हालको मेनु प्रमाणित गरेका छैनौँ। आफ्नो बसाइमा नास्ता प्याक गर्न मिल्छ कि सोध्नुहोस्, पानी साथमा राख्नुहोस् र फर्कँदा खुला भेटिएको ठाउँको मूल्य/सामग्री हेरेर रोज्नुहोस्।</p></div></div></section>
+<section class="gallery" aria-labelledby="gallery-title"><div class="site-shell"><p class="eyebrow">फोटोको मिति र स्रोत</p><h2 class="section-title" id="gallery-title">टाइगर हिलका वास्तविक पुराना दृश्य</h2><div class="gallery-grid">{[photos.viewpoint,photos.dawn,photos.range].map(p=><figure><img src={p.src} alt={p.alt} width={p.width} height={p.height} loading="lazy" decoding="async"/><figcaption class="photo-credit"><a href={p.source}>{p.author} · {p.date}</a> · <a href={p.licenseURL}>{p.license}</a></figcaption></figure>)}</div><p class="copy">यी फाइलको मूल लेखक, फोटो मिति र लागू Creative Commons सर्त माथिका लिङ्कमा छन्। प्रदर्शनमा क्रप हुन सक्छ; मूल फाइलको सामग्री परिवर्तन गरिएको छैन।</p></div></section>
+<section class="map-section" id="map"><div class="site-shell"><p class="eyebrow">सही स्थान</p><h2 class="section-title">सेन्चल रोडको Observatory नक्सा</h2><div class="map-wrap"><iframe src={EMBED} title="दार्जिलिङको Tiger Hill Observatory नक्सा" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="copy">Senchal Rd, Senchal Forest, West Bengal 734102, India · <bdi dir="ltr">{LAT}, {LNG}</bdi> · <a href={MAP}>Google Maps मा खोल्नुहोस्</a></p><p class="copy">Google Maps को मूल्याङ्कन <bdi dir="ltr">4.5/5 (18,431)</bdi> र सातै दिन <bdi dir="ltr">03:00–17:00</bdi> सूची २६ अक्टोबर २०२६ मा हेरिएको हो। यो यस वेबसाइटको आफ्नै मूल्याङ्कन होइन। समयले सूर्योदय दृश्य, प्रवेश अनुमति वा सेवाको उपलब्धता निश्चित गर्दैन।</p></div></section>
+<section class="faq" id="faq"><div class="site-shell faq-layout"><div><p class="eyebrow">सोधिने कुरा</p><h2 class="section-title">जानेअघि जान्नुहोस्</h2><p class="copy">दृश्यको अपेक्षा, सूचीकृत समय र वास्तविक पहुँचलाई छुट्टाछुट्टै बुझ्नुहोस्।</p></div><div>{faqs.map((f,i)=><details open={i===0}><summary>{f.q}</summary><p>{f.a}</p></details>)}</div></div></section>
+<section class="sources" id="sources"><div class="site-shell sources-list"><div><p class="eyebrow">सम्पादकीय जिम्मेवारी</p><h2 class="section-title">स्रोत र जानकारीको सीमा</h2><p class="copy">यो स्वतन्त्र, गैरआधिकारिक, गैरनाफामूलक पर्यटन शैक्षिक मार्गदर्शिका हो। जिल्ला प्रशासन, वन प्रशासन वा दृश्यस्थलको सञ्चालन निकाय होइन। गन्तव्यको परिचयका लागि सरकारी पर्यटन विवरण र स्थानको तेस्रो पक्षीय सूची छुट्टाछुट्टै प्रयोग गरिएको छ।</p><p class="sources-meta">सूचना जाँच: २६ अक्टोबर २०२६ · सम्पादकीय जिम्मेवारी: tigerhillsunrise.com मार्गदर्शिका। अनुमति वा शुल्क जारी गर्ने अधिकार यस साइटसँग छैन।</p></div><ul><li><b>दार्जिलिङ जिल्ला पर्यटन</b><a href={district}>Tiger Hill — सरकारी परिचय</a><span>हिमाली दृश्य र सेन्चल सन्दर्भ; पृष्ठको अद्यावधिक ३० सेप्टेम्बर २०२०।</span></li><li><b>Incredible India</b><a href={ministry}>पर्यटन मन्त्रालयको Tiger Hill विवरण</a><span>उचाइ र यात्राको सन्दर्भ; हालको टिकट वा सडक आदेश होइन।</span></li><li><b>Google Maps</b><a href={MAP}>Observatory / Sunrise Viewpoint</a><span>नक्सा, मूल्याङ्कन र सूचीकृत समयको २६ अक्टोबर २०२६ को अवलोकन।</span></li><li><b>चार फोटोको श्रेय</b><a href="/CREDITS.txt">लेखक, मूल फाइल र इजाजतपत्र</a><span>ऐतिहासिक वास्तविक फोटो; आजको सञ्चालन वा दृश्यको प्रमाण होइन।</span></li></ul></div></section>
+<section class="about" id="privacy"><div class="site-shell legal-copy"><p class="eyebrow">गोपनीयता र प्रयोग</p><h2 class="section-title">तपाईंको Analytics छनोट</h2><p>अनुमति सफलतापूर्वक सुरक्षित भएपछि Google Analytics तुरुन्त लोड हुन सक्छ। यो प्रयोगको मापन Google लाई पठाउन सक्छ। अस्वीकार वा फिर्ता गर्दा यस पृष्ठको थप Analytics मापन रोक्ने सेटिङ लागू हुन्छ; पहिले पठाइएको विवरण फिर्ता ल्याउन सकिँदैन। सुरक्षित गर्न नसक्दा सन्देशले त्यसको सीमा बताउँछ।</p><p>यो साइटले Analytics छनोट ब्राउजरको स्थानीय स्टोरेजमा राख्छ र अस्वीकार सुरक्षित नभए चालु ट्याबको सत्रमा रोक्ने प्रयास गर्छ। ब्राउजरले भण्डारण रोक्दा वा नयाँ सत्र खोल्दा पुरानो अनुमति बाँकी रहने जोखिम सन्देशमा स्पष्ट हुन्छ। <button type="button" data-open-settings>कुकी सेटिङ खोल्नुहोस्</button>।</p><p>नक्सा खोल्दा वा iframe लोड हुँदा Google ले आफ्नो सेवाका नियमअनुसार अनुरोधसम्बन्धी विवरण पाउन सक्छ; यो Analytics छनोटले नक्सा नियन्त्रण गर्दैन। फोटो यस साइटबाट आउँछन्; पाठका लागि ब्राउजरमा उपलब्ध फन्ट प्रयोग हुन्छन्। मूल फोटो, स्रोत र इजाजतपत्रका बाह्य लिङ्क खोल्दा सम्बन्धित प्रदायकको नीति लागू हुन्छ। <a href="https://policies.google.com/privacy">Google गोपनीयता नीति</a>।</p><p>Cloudflare होस्टिङले सेवा लग र छुट्टै performance/RUM beacon प्रयोग वा समावेश गर्न सक्छ। यो Google Analytics सेटिङले होस्टिङको beacon नियन्त्रण गर्दैन; स्क्रिप्ट देखिनु मात्रले कुनै खास अनुरोधमा विवरण पठाइएको प्रमाणित गर्दैन। <a href="https://developers.cloudflare.com/web-analytics/data-metrics/data-origin-and-collection/">Cloudflare को विवरण</a>। PWA ले सफल पृष्ठ र साइट फाइल अफलाइन प्रयोगका लागि क्यास गर्न सक्छ; पुरानो सामग्री रहन सक्छ, भ्रमणअघि हालको स्रोत फेरि हेर्नुहोस्।</p><h3 id="terms">सूचना प्रयोगको सीमा</h3><p>यो सूचना मार्गदर्शिका हो, टिकट बिक्री, यातायात बुकिङ वा आधिकारिक अनुमति सेवा होइन। भ्रमणको निर्णयमा हालको प्रशासनिक निर्देशन र स्थानीय अवस्थालाई प्राथमिकता दिनुहोस्। पुनःप्रयोग गर्दा प्रत्येक फोटोको सम्बन्धित इजाजतपत्र र लेखकको श्रेय कायम राख्नुहोस्। यस साइटले दर्ता भएको परोपकारी संस्थाको हैसियत वा सरकारी अनुमोदन दाबी गर्दैन।</p><p>अद्यावधिक: २६ अक्टोबर २०२६।</p></div></section>
+</main>
+<footer class="footer"><div class="site-shell"><div class="footer-grid"><div><a href="/">Tiger Hill · नेपाली यात्रा मार्गदर्शिका</a><p>स्वतन्त्र · गैरआधिकारिक · गैरनाफामूलक पर्यटन शैक्षिक सूचना।</p></div><div><p><a href="#sources">स्रोत</a> · <a href="/CREDITS.txt">फोटो श्रेय</a> · <a href="#privacy">गोपनीयता</a> · <a href="#terms">प्रयोगको सीमा</a></p><button type="button" id="cookie-settings">कुकी सेटिङ</button></div></div><p class="disclaimer">समय, शुल्क, सडक र पहुँच व्यवस्थाको अन्तिम पुष्टि आफ्नो यात्रा मितिका लागि गर्नुहोस्। साइटले हिमाल देखिने वा प्रवेश पाइने ग्यारेन्टी गर्दैन।</p></div></footer>
+<div class="cookie-panel" id="cookie-panel" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-copy" hidden><h2 id="cookie-title">Analytics अनुमति</h2><p id="cookie-copy">अनुमति सुरक्षित भएपछि Google Analytics लोड हुन सक्छ। अस्वीकारले साइटको मुख्य सामग्री रोक्दैन। नक्साको Google सेवा यस छनोटभन्दा अलग छ।</p><p id="consent-status" role="status" aria-live="polite"></p><div class="cookie-actions"><button class="cookie-accept" type="button" data-consent="yes">अनुमति दिनुहोस्</button><button class="cookie-reject" type="button" data-consent="no">अस्वीकार / फिर्ता</button><button type="button" data-close-settings>बन्द गर्नुहोस्</button></div></div>
+</body></html>
