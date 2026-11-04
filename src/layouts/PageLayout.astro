@@ -1,0 +1,398 @@
+---
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import {
+  LANGS,
+  DEFAULT_LANG,
+  HTML_LANG,
+  OG_LOCALE,
+  DIR,
+  LANG_NAME,
+  pathFor,
+  ui,
+  type Lang
+} from '../lib/i18n';
+import {
+  SITE,
+  ENTITY,
+  EMBED,
+  PHOTOS,
+  OFFICIAL,
+  GROUP_LABELS,
+  navItems,
+  type GroupKey
+} from '../lib/site';
+
+interface Props {
+  entry: { data: Record<string, any>; id: string };
+}
+const { entry } = Astro.props;
+const d = entry.data;
+const lang = d.lang as Lang;
+const t = ui(lang);
+const isHome = d.slug === 'home';
+const homeHref = pathFor(lang, 'home');
+
+const all = await getCollection('pages');
+const own = all
+  .filter((e) => e.data.lang === lang)
+  .sort((a, b) => a.data.order - b.data.order);
+const byKey = new Map(all.map((e) => [`${e.data.lang}/${e.data.slug}`, e]));
+
+const alternates = LANGS.map((l) => {
+  const sibling = byKey.get(`${l}/${d.slug}`);
+  return sibling ? { lang: l, path: pathFor(l, d.slug) } : null;
+}).filter((x): x is { lang: Lang; path: string } => Boolean(x));
+
+const canonical = SITE + pathFor(lang, d.slug);
+const heroPhoto = PHOTOS[(d.image as keyof typeof PHOTOS) || 'dawn'] ?? PHOTOS.dawn;
+
+const related = (d.related as string[])
+  .map((slug) => byKey.get(`${lang}/${slug}`))
+  .filter((e): e is (typeof all)[number] => Boolean(e));
+
+const groups: GroupKey[] = ['sunrise', 'practical', 'nearby', 'itinerary', 'faq'];
+
+const graph: Record<string, unknown>[] = [
+  {
+    '@type': 'Organization',
+    '@id': `${SITE}/#publisher`,
+    name: t.brand,
+    url: `${SITE}/`,
+    description: t.nonOfficial,
+    logo: { '@type': 'ImageObject', url: `${SITE}/icons/icon-512.png` }
+  },
+  {
+    '@type': 'WebSite',
+    '@id': `${SITE}/#website`,
+    url: `${SITE}/`,
+    name: ENTITY.displayName,
+    inLanguage: HTML_LANG[lang],
+    publisher: { '@id': `${SITE}/#publisher` }
+  },
+  {
+    '@type': 'TouristAttraction',
+    '@id': `${SITE}/#attraction`,
+    name: ENTITY.name,
+    alternateName: [ENTITY.commonName, ENTITY.displayName, ENTITY.localName],
+    description:
+      'Himalayan sunrise viewpoint in the Senchal area of Darjeeling, West Bengal. Visibility depends on weather.',
+    url: `${SITE}/`,
+    image: `${SITE}${PHOTOS.dawn.src}`,
+    geo: { '@type': 'GeoCoordinates', latitude: ENTITY.lat, longitude: ENTITY.lng },
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: ENTITY.street,
+      addressLocality: ENTITY.locality,
+      addressRegion: ENTITY.region,
+      postalCode: ENTITY.postalCode,
+      addressCountry: ENTITY.country
+    },
+    hasMap: ENTITY.map,
+    sameAs: [ENTITY.map, OFFICIAL.district, OFFICIAL.ministry]
+  },
+  {
+    '@type': 'WebPage',
+    '@id': `${SITE}${pathFor(lang, d.slug)}#webpage`,
+    url: canonical,
+    name: d.title,
+    description: d.description,
+    inLanguage: HTML_LANG[lang],
+    dateModified: d.updated,
+    isPartOf: { '@id': `${SITE}/#website` },
+    about: { '@id': `${SITE}/#attraction` },
+    publisher: { '@id': `${SITE}/#publisher` },
+    primaryImageOfPage: { '@type': 'ImageObject', url: `${SITE}${heroPhoto.src}` }
+  }
+];
+
+if (!isHome) {
+  graph.push({
+    '@type': 'BreadcrumbList',
+    '@id': `${SITE}${pathFor(lang, d.slug)}#breadcrumb`,
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: t.home, item: SITE + homeHref },
+      { '@type': 'ListItem', position: 2, name: d.h1, item: canonical }
+    ]
+  });
+  graph.push({
+    '@type': 'Article',
+    '@id': `${SITE}${pathFor(lang, d.slug)}#article`,
+    headline: d.h1,
+    description: d.description,
+    inLanguage: HTML_LANG[lang],
+    datePublished: d.updated,
+    dateModified: d.updated,
+    mainEntityOfPage: { '@id': `${SITE}${pathFor(lang, d.slug)}#webpage` },
+    author: { '@id': `${SITE}/#publisher` },
+    publisher: { '@id': `${SITE}/#publisher` },
+    about: { '@id': `${SITE}/#attraction` },
+    isPartOf: { '@id': `${SITE}/#website` },
+    image: `${SITE}${heroPhoto.src}`
+  });
+}
+
+if (Array.isArray(d.faqs) && d.faqs.length) {
+  graph.push({
+    '@type': 'FAQPage',
+    '@id': `${SITE}${pathFor(lang, d.slug)}#faq`,
+    inLanguage: HTML_LANG[lang],
+    mainEntity: d.faqs.map((f: { q: string; a: string }) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a }
+    }))
+  });
+}
+
+const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
+const nav = navItems(lang);
+---
+
+<!doctype html>
+<html lang={HTML_LANG[lang]} dir={DIR[lang]}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content={d.description} />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#10182d" />
+  <link rel="canonical" href={canonical} />
+  {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={SITE + a.path} />)}
+  <link rel="alternate" hreflang="x-default" href={SITE + pathFor(DEFAULT_LANG, d.slug)} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta property="og:type" content={isHome ? 'website' : 'article'} />
+  <meta property="og:site_name" content={ENTITY.displayName} />
+  <meta property="og:title" content={d.title} />
+  <meta property="og:description" content={d.description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:locale" content={OG_LOCALE[lang]} />
+  {alternates.filter((a) => a.lang !== lang).map((a) => <meta property="og:locale:alternate" content={OG_LOCALE[a.lang]} />)}
+  <meta property="og:image" content={SITE + heroPhoto.src} />
+  <meta property="og:image:width" content={String(heroPhoto.width)} />
+  <meta property="og:image:height" content={String(heroPhoto.height)} />
+  <meta property="og:image:alt" content={heroPhoto.alt[lang]} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={d.title} />
+  <meta name="twitter:description" content={d.description} />
+  <meta name="twitter:image" content={SITE + heroPhoto.src} />
+  <meta name="twitter:image:alt" content={heroPhoto.alt[lang]} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script is:inline define:vars={{ thsConsent: t.cookie, thsLang: HTML_LANG[lang] }}>
+    window.__THS_CONSENT__ = thsConsent;
+    document.documentElement.setAttribute('data-ths-lang', thsLang);
+  </script>
+  <script is:inline src="/analytics.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">{t.skip}</a>
+
+  <header class="site-header">
+    <div class="site-shell header-inner">
+      <a class="brand" href={homeHref}>
+        <img src="/logo.svg" alt={ENTITY.displayName} width="280" height="72" />
+      </a>
+      <nav class="site-nav" aria-label={t.menu}>
+        {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+      <div class="lang-switch" aria-label={t.languageLabel}>
+        {alternates.map((a) => (
+          <a href={a.path} hreflang={a.lang} lang={a.lang} aria-current={a.lang === lang ? 'true' : undefined}>{LANG_NAME[a.lang]}</a>
+        ))}
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="page-hero-media" aria-hidden="true">
+        <img src={heroPhoto.src} alt="" width={heroPhoto.width} height={heroPhoto.height} fetchpriority="high" decoding="async" />
+      </div>
+      <div class="site-shell page-hero-inner">
+        <p class="eyebrow hero-kicker">{d.kicker}</p>
+        <h1 class="hero-title">{d.h1}</h1>
+        <p class="hero-lede">{d.lede}</p>
+        {!isHome && (
+          <nav class="breadcrumb-trail" aria-label="Breadcrumb">
+            <a href={homeHref}>{t.home}</a>
+            <span class="sep">/</span>
+            <span class="crumb-current">{d.h1}</span>
+          </nav>
+        )}
+        {isHome && (
+          <div class="hero-actions">
+            <a class="btn btn-primary" href={pathFor(lang, 'sunrise-time')}>{t.nav.sunrise}</a>
+            <a class="btn btn-ghost" href={ENTITY.map} target="_blank" rel="noopener noreferrer">{t.mapOpen}</a>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <section class="page-body">
+      <div class="site-shell page-grid">
+        <article class="prose">
+          <slot />
+        </article>
+        <aside class="page-aside">
+          {d.quickfacts.length > 0 && (
+            <div class="quick-facts">
+              <h2>{t.quickFactsTitle}</h2>
+              <dl>
+                {d.quickfacts.map((row: { k: string; v: string }) => (
+                  <div class="row"><dt>{row.k}</dt><dd>{row.v}</dd></div>
+                ))}
+              </dl>
+            </div>
+          )}
+          <div class="meta-card">
+            <p><strong>{t.updatedLabel}:</strong> <time datetime={d.updated}>{d.updated}</time></p>
+            <p><strong>{t.checkedLabel}:</strong> <time datetime={d.checked}>{d.checked}</time></p>
+            <p class="copyright">{t.nonOfficial}</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    {d.gallery && (
+      <section class="gallery" aria-labelledby="gallery-title">
+        <div class="site-shell">
+          <h2 class="section-title" id="gallery-title">{t.galleryTitle}</h2>
+          <div class="gallery-grid">
+            {[PHOTOS.viewpoint, PHOTOS.dawn, PHOTOS.range].map((p) => (
+              <figure>
+                <img src={p.src} alt={p.alt[lang]} width={p.width} height={p.height} loading="lazy" decoding="async" />
+                <figcaption class="photo-credit">
+                  <a href={p.source}>{p.author} · {p.date}</a> · <a href={p.licenseURL}>{p.license}</a>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <p class="copy">{t.galleryNote}</p>
+        </div>
+      </section>
+    )}
+
+    {d.map && (
+      <section class="map-section" id="map">
+        <div class="site-shell">
+          <h2 class="section-title">{t.mapTitle}</h2>
+          <div class="map-wrap">
+            <iframe src={EMBED} title={t.mapTitle} loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+          <p class="copy">
+            {ENTITY.street}, {ENTITY.locality}, {ENTITY.region} {ENTITY.postalCode}, India · <bdi dir="ltr">{ENTITY.lat}, {ENTITY.lng}</bdi> · <a href={ENTITY.map}>{t.mapOpen}</a>
+          </p>
+          <p class="copy">{t.mapNote}</p>
+        </div>
+      </section>
+    )}
+
+    {d.faqs.length > 0 && (
+      <section class="faq" id="faq">
+        <div class="site-shell faq-layout">
+          <div>
+            <p class="eyebrow">{t.faqTitle}</p>
+            <h2 class="section-title">{t.faqTitle}</h2>
+          </div>
+          <div>
+            {d.faqs.map((f: { q: string; a: string }, i: number) => (
+              <details open={i === 0}><summary>{f.q}</summary><p>{f.a}</p></details>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    {d.guidesIndex && (
+      <section class="guides-index" id="guides">
+        <div class="site-shell">
+          <p class="eyebrow">{t.nav.allGuides}</p>
+          <h2 class="section-title">{t.nav.allGuides}</h2>
+          <div class="guides-groups">
+            {groups.map((g) => {
+              const items = own.filter((e) => e.data.group === g && e.data.slug !== 'home');
+              if (!items.length) return null;
+              return (
+                <div class="guides-group">
+                  <h3>{GROUP_LABELS[g][lang]}</h3>
+                  <ul>
+                    {items.map((e) => <li><a href={pathFor(lang, e.data.slug)}>{e.data.h1}</a></li>)}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    )}
+
+    {related.length > 0 && (
+      <section class="related">
+        <div class="site-shell">
+          <h2 class="section-title">{t.relatedTitle}</h2>
+          <ul class="related-list">
+            {related.map((e) => (
+              <li>
+                <a href={pathFor(lang, e.data.slug)}>
+                  <span class="related-h">{e.data.h1}</span>
+                  <span class="related-d">{e.data.description}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
+
+    <section class="sources" id="sources">
+      <div class="site-shell sources-list">
+        <div>
+          <p class="eyebrow">{t.nav.sources}</p>
+          <h2 class="section-title">{t.sourcesTitle}</h2>
+          <p class="copy">{t.sourcesIntro}</p>
+          <p class="sources-meta">{t.sourcesMeta}</p>
+        </div>
+        <ul>
+          {d.sources.map((s: { label: string; url: string; note: string }) => (
+            <li><b>{s.label}</b><a href={s.url}>{s.url}</a>{s.note && <span>{s.note}</span>}</li>
+          ))}
+          <li><b>{t.credits}</b><a href="/CREDITS.txt">public/CREDITS.txt</a><span>{t.galleryNote}</span></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="site-shell">
+      <div class="footer-grid">
+        <div>
+          <a href={homeHref}>{ENTITY.displayName}</a>
+          <p>{t.footerTagline}</p>
+        </div>
+        <div>
+          <p>
+            <a href="#sources">{t.footerLinks}</a> · <a href="/CREDITS.txt">{t.credits}</a> · <a href={`${homeHref}#privacy`}>{t.privacy}</a> · <a href={`${homeHref}#terms`}>{t.terms}</a>
+          </p>
+          <button type="button" id="cookie-settings">{t.cookieSettings}</button>
+        </div>
+      </div>
+      <p class="disclaimer">{t.disclaimer}</p>
+    </div>
+  </footer>
+
+  <div class="cookie-panel" id="cookie-panel" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-copy" hidden>
+    <h2 id="cookie-title">{t.cookie.title}</h2>
+    <p id="cookie-copy">{t.cookie.body}</p>
+    <p id="consent-status" role="status" aria-live="polite"></p>
+    <div class="cookie-actions">
+      <button class="cookie-accept" type="button" data-consent="yes">{t.cookie.accept}</button>
+      <button class="cookie-reject" type="button" data-consent="no">{t.cookie.reject}</button>
+      <button type="button" data-close-settings>{t.cookie.close}</button>
+    </div>
+  </div>
+</body>
+</html>

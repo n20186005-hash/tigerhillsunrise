@@ -1,0 +1,16 @@
+---
+import { getCollection, render } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+
+export async function getStaticPaths() {
+  return [{ params: { lang: 'ne' } }, { params: { lang: 'bn' } }, { params: { lang: 'ur' } }];
+}
+
+const { lang } = Astro.params as { lang: string };
+const pages = await getCollection('pages');
+const entry = pages.find((e) => e.data.lang === lang && e.data.slug === 'home')!;
+const { Content } = await render(entry);
+---
+<PageLayout entry={entry}>
+  <Content />
+</PageLayout>

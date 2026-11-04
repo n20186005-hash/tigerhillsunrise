@@ -1,4 +1,41 @@
 ---
 import '../styles/global.css';
 ---
-<!doctype html><html lang="ne"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>पृष्ठ भेटिएन — Tiger Hill मार्गदर्शिका</title><meta name="description" content="यो ठेगानामा पृष्ठ भेटिएन। टाइगर हिल नेपाली यात्रा मार्गदर्शिकाको मुख्य पृष्ठमा फर्कनुहोस्।"/><meta name="robots" content="noindex,follow"/><link rel="icon" href="/favicon.svg"/></head><body><main class="site-shell legal-copy" style="padding-block:80px"><p>त्रुटि 404</p><h1>पृष्ठ भेटिएन</h1><p>यो URL मा सामग्री छैन।</p><a href="/">टाइगर हिल मुख्य पृष्ठमा फर्कनुहोस्</a></main></body></html>
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Page not found — Tiger Hill Sunrise Guide</title>
+  <meta name="description" content="This address has no page. Return to the Tiger Hill sunrise guide." />
+  <meta name="robots" content="noindex,follow" />
+  <link rel="icon" href="/favicon.svg" />
+</head>
+<body>
+  <main class="site-shell legal-copy" style="padding-block:80px">
+    <p data-404="code">Error 404</p>
+    <h1 data-404="title">Page not found</h1>
+    <p data-404="body">There is no content at this URL.</p>
+    <a href="/" data-404="home">Return to the Tiger Hill guide</a>
+  </main>
+  <script is:inline>
+    (() => {
+      const map = {
+        en: { lang: 'en', dir: 'ltr', title: 'Page not found — Tiger Hill Sunrise Guide', code: 'Error 404', heading: 'Page not found', body: 'There is no content at this URL.', home: 'Return to the Tiger Hill guide', href: '/' },
+        ne: { lang: 'ne', dir: 'ltr', title: 'पृष्ठ भेटिएन — टाइगर हिल सूर्योदय मार्गदर्शिका', code: 'त्रुटि 404', heading: 'पृष्ठ भेटिएन', body: 'यो URL मा सामग्री छैन।', home: 'टाइगर हिल मार्गदर्शिकाको मुख्य पृष्ठमा फर्कनुहोस्', href: '/ne/' },
+        bn: { lang: 'bn', dir: 'ltr', title: 'পাতা পাওয়া যায়নি — টাইগার হিল সূর্যোদয় গাইড', code: 'ত্রুটি 404', heading: 'পাতা পাওয়া যায়নি', body: 'এই URL-এ কোনো বিষয়বস্তু নেই।', home: 'টাইগার হিল গাইডে ফিরে যান', href: '/bn/' },
+        ur: { lang: 'ur', dir: 'rtl', title: 'صفحہ نہیں ملا — ٹائیگر ہل طلوعِ آفتاب گائیڈ', code: 'خرابی 404', heading: 'صفحہ نہیں ملا', body: 'اس URL پر کوئی مواد نہیں۔', home: 'ٹائیگر ہل گائیڈ پر واپس جائیں', href: '/ur/' }
+      };
+      const seg = location.pathname.split('/').filter(Boolean)[0];
+      const t = map[seg] || map.en;
+      const html = document.documentElement;
+      html.lang = t.lang;
+      html.dir = t.dir;
+      document.title = t.title;
+      const set = (key, value) => { const el = document.querySelector('[data-404="' + key + '"]'); if (el) el.textContent = value; };
+      set('code', t.code); set('title', t.heading); set('body', t.body); set('home', t.home);
+      const link = document.querySelector('[data-404="home"]'); if (link) link.setAttribute('href', t.href);
+    })();
+  </script>
+</body>
+</html>

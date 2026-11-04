@@ -1,7 +1,13 @@
-const VERSION = 'ths-2026-10-26';
+const VERSION = 'ths-2026-11-04';
 const SHELL = VERSION + '-shell';
 const ASSETS = VERSION + '-assets';
 const PRECACHE = ['/', '/favicon.svg', '/favicon-32x32.png', '/favicon-16x16.png', '/apple-touch-icon.png', '/logo.svg', '/site.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png', '/icons/icon-512-maskable.png', '/images/tiger-hill-kanchenjunga-dawn.jpg', '/images/tiger-hill-kanchenjunga-range.jpg', '/images/tiger-hill-sunrise.jpg', '/images/tiger-hill-viewpoint.jpg'];
+const OFFLINE = {
+  en: 'Offline: this page is not cached. Reconnect and try again.',
+  ne: 'अफलाइन: यो पृष्ठ सुरक्षित छैन। इन्टरनेट जोडिएपछि फेरि प्रयास गर्नुहोस्।',
+  bn: 'অফলাইন: এই পাতা সংরক্ষিত নেই। ইন্টারনেট যুক্ত করে আবার চেষ্টা করুন।',
+  ur: 'آف لائن: یہ صفحہ محفوظ نہیں۔ انٹرنیٹ جڑنے پر دوبارہ کوشش کریں۔'
+};
 self.addEventListener('install', event => event.waitUntil(caches.open(SHELL).then(cache=>cache.addAll(PRECACHE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('ths-')&&!key.startsWith(VERSION)).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch', event => {
@@ -19,7 +25,9 @@ self.addEventListener('fetch', event => {
         return response;
       } catch {
         const cached = await caches.match(request);
-        return cached || new Response('अफलाइन: यो पृष्ठ सुरक्षित छैन। इन्टरनेट जोडिएपछि फेरि प्रयास गर्नुहोस्।',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}});
+        const lang = (url.pathname.split('/')[1]||'').toLowerCase();
+        const offlineText = OFFLINE[lang] || OFFLINE.en;
+        return cached || new Response(offlineText,{status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}});
       }
     })());
     return;

@@ -1,12 +1,50 @@
-// Existing yes/no choice, with effective runtime refusal before persistence.
+// Analytics consent, with localized messages injected per page language.
+// The layout publishes window.__THS_CONSENT__ (see PageLayout.astro); the
+// English strings below are only a safety fallback for the static 404 page.
 (() => {
   const key = 'tiger-hill-ga-consent';
   const vetoKey = key + '-session-denied';
   const id = 'G-HXM22WWPKP';
+  const messages = window.__THS_CONSENT__ || {
+    title: 'Analytics consent',
+    body: 'If you allow it, Google Analytics may load. Refusing does not block the main content.',
+    accept: 'Allow',
+    reject: 'Refuse / withdraw',
+    close: 'Close',
+    status: {
+      accepted: 'Consent saved. Google Analytics may load now.',
+      deniedSaved: 'Refusal saved. Further Analytics on this page is off.',
+      deniedRemoved: 'The shared consent was removed. Further Analytics on this page is off.',
+      deniedSession: 'Refusal could not be saved. Analytics is off on this page and in the current tab session.',
+      deniedFailed: 'Refusal could not be saved. Analytics is off on this page.',
+      acceptFailed: 'Consent could not be saved. Analytics is off on this page.',
+      acceptFailedClean: 'Consent could not be saved. Analytics is off on this page and no shared consent remains.',
+      acceptFailedSession: 'Consent could not be confirmed. Analytics is off on this page and in the current tab.',
+      remoteDenied: 'Following the choice made in another tab, Analytics is off on this page.'
+    },
+    offline: 'Offline: this page is not cached. Reconnect and try again.'
+  };
+  const msg = messages.status || {};
+
   const panel = document.getElementById('cookie-panel');
   const status = document.getElementById('consent-status');
   let loaded = false;
   let deniedHere = false;
+
+  // Fill any static panel markup (the 404 page) with the active language.
+  if (panel) {
+    const title = panel.querySelector('#cookie-title');
+    const copy = panel.querySelector('#cookie-copy');
+    const accept = panel.querySelector('[data-consent="yes"]');
+    const reject = panel.querySelector('[data-consent="no"]');
+    const close = panel.querySelector('[data-close-settings]');
+    if (title) title.textContent = messages.title;
+    if (copy) copy.textContent = messages.body;
+    if (accept) accept.textContent = messages.accept;
+    if (reject) reject.textContent = messages.reject;
+    if (close) close.textContent = messages.close;
+  }
+
   const read = (storageName, name) => { try { return window[storageName].getItem(name); } catch { return undefined; } };
   const say = (message) => { if (status) status.textContent = message; };
   const stop = () => {
@@ -54,10 +92,10 @@
     stop();
     const sessionOff = veto();
     const saved = revokeShared();
-    say(saved === 'denied' ? 'अस्वीकार सुरक्षित भयो। यस पृष्ठको थप Analytics बन्द छ; पहिले पठाइएको विवरण फिर्ता आउँदैन।'
-      : saved === 'removed' ? 'साझा अनुमति हटाइएको पुष्टि भयो। यस पृष्ठको थप Analytics बन्द छ; फेरि खोल्दा छनोट सोधिन सक्छ। पहिले पठाइएको विवरण फिर्ता आउँदैन।'
-      : sessionOff ? 'अस्वीकार सुरक्षित भएन। यस पृष्ठ र चालु ट्याबको सत्रमा Analytics बन्द छ। अर्को ट्याब वा नयाँ सत्रमा पुरानो अनुमति लागू हुन सक्छ।'
-      : 'अस्वीकार सुरक्षित भएन। यस पृष्ठमा Analytics बन्द छ। फेरि खोल्दा वा अर्को ट्याबमा पुरानो अनुमति लागू हुन सक्छ।');
+    say(saved === 'denied' ? msg.deniedSaved
+      : saved === 'removed' ? msg.deniedRemoved
+      : sessionOff ? msg.deniedSession
+      : msg.deniedFailed);
     return saved;
   };
   const allow = () => {
@@ -67,14 +105,12 @@
       deniedHere = true;
       const sessionOff = veto();
       const sharedOff = revokeShared();
-      say(sharedOff ? 'अनुमति सुरक्षित भएन। यस पृष्ठको Analytics बन्द छ र साझा अनुमति बाँकी नरहेको पुष्टि भयो। फेरि खोल्दा छनोट सोधिन सक्छ।'
-        : sessionOff ? 'अनुमति सुरक्षित भएको पुष्टि भएन। यस पृष्ठ र चालु ट्याबमा Analytics बन्द छ; यो प्रयास वा पहिलेको अनुमति अर्को ट्याब वा नयाँ सत्रमा लागू हुन सक्छ।'
-        : 'अनुमति सुरक्षित भएको पुष्टि भएन। यस पृष्ठमा Analytics बन्द छ; यो प्रयास वा पहिलेको अनुमति अर्को पटक वा अर्को ट्याबमा लागू हुन सक्छ।');
+      say(sharedOff ? msg.acceptFailedClean : sessionOff ? msg.acceptFailedSession : msg.acceptFailed);
       return false;
     }
     deniedHere = false;
     start();
-    say('अनुमति सुरक्षित भयो। Google Analytics अहिले लोड हुन सक्छ। पछि यही सेटिङबाट फिर्ता लिन सक्नुहुन्छ।');
+    say(msg.accepted);
     return true;
   };
   stop();
@@ -96,10 +132,10 @@
       deniedHere = true;
       stop();
       veto();
-      say('अर्को ट्याबको छनोटअनुसार यस पृष्ठको Analytics बन्द छ।');
+      say(msg.remoteDenied);
     } else if (deniedHere) stop();
   });
-  if ('serviceWorker' in navigator && location.protocol === 'https:' && !['localhost','127.0.0.1'].includes(location.hostname)) {
+  if ('serviceWorker' in navigator && location.protocol === 'https:' && !['localhost', '127.0.0.1'].includes(location.hostname)) {
     window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
   }
 })();

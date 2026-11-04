@@ -1,11 +1,11 @@
 {
   "name": "Tiger Hill Observatory / Sunrise Viewpoint",
   "short_name": "Tiger Hill",
-  "description": "दार्जिलिङको टाइगर हिल सूर्योदय दृश्यस्थल: स्थान, यात्रा तयारी र स्रोतसहित नेपाली मार्गदर्शिका।",
+  "description": "Independent guide to the Tiger Hill Observatory sunrise viewpoint in Darjeeling: timings, how to reach, entry, nearby sights and practical travel planning, with sources.",
   "id": "/",
   "start_url": "/",
   "scope": "/",
-  "lang": "ne",
+  "lang": "en",
   "dir": "ltr",
   "display": "standalone",
   "orientation": "portrait",
